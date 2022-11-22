@@ -8,11 +8,11 @@ from . import main
 @main.get("/")
 @login_required
 def index():
-    return render_template("index.html")
+    return render_template("index.html", page="index")
 
 
 @main.get('/admin')
 @login_required
 @admin_required
 def admin_page():
-    return render_template('admin.html')
+    return render_template('admin.html', page="admin")

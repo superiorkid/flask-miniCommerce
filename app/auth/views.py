@@ -26,7 +26,7 @@ def signin():
         except:
             abort(500)
 
-    return render_template("auth/signin.html", title="Login Form", form=form)
+    return render_template("auth/signin.html", title="Login Form", form=form, page="signin")
 
 
 @auth.get('/signup')
@@ -49,7 +49,7 @@ def signup():
         except:
             abort(500)
 
-    return render_template('auth/signup.html', form=form)
+    return render_template('auth/signup.html', form=form, page="signup")
 
 
 @auth.get("/logout")
