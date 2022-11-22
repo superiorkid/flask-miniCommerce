@@ -31,8 +31,10 @@ def signin():
 
 @auth.get('/signup')
 @auth.post('/signup')
-@login_required
 def signup():
+    if current_user.is_authenticated:
+        return redirect(url_for('main.index'))
+
     form = RegisterForm()
 
     if form.validate_on_submit():
