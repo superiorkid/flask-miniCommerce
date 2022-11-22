@@ -1,5 +1,6 @@
-from flask import render_template, redirect, url_for
-from flask_login import current_user, login_required
+from flask import render_template
+from flask_login import login_required
+from ..decorators import admin_required
 
 from . import main
 
@@ -8,3 +9,10 @@ from . import main
 @login_required
 def index():
     return render_template("index.html")
+
+
+@main.get('/admin')
+@login_required
+@admin_required
+def admin_page():
+    return render_template('admin.html')
