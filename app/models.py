@@ -1,6 +1,9 @@
 from werkzeug.security import check_password_hash, generate_password_hash
 from flask_login import UserMixin, AnonymousUserMixin
 from flask import current_app
+from itsdangerous.serializer import Serializer
+from hashlib import md5
+from datetime import datetime
 
 from . import login_manager, db
 
@@ -8,9 +11,21 @@ from . import login_manager, db
 class User(UserMixin, db.Model):
     # user auth
     id = db.Column(db.Integer, primary_key=True)
-    email = db.Column(db.String, unique=True, nullable=False)
-    username = db.Column(db.String, unique=True, nullable=False)
-    password_hash = db.Column(db.String)
+    email = db.Column(db.String(120), unique=True, nullable=False)
+    password_hash = db.Column(db.String(40), nullable=False)
+    confirmed = db.Column(db.Boolean, nullable=False, default=False)
+    confirmed_on = db.Column(db.DateTime, nullable=True)
+
+    # user information
+    fname = db.Column(db.String(30), nullable=True)
+    lname = db.Column(db.String(30), nullable=True)
+    address = db.Column(db.String(30), nullable=True)
+    city = db.Column(db.String(30), nullable=True)
+    state = db.Column(db.String(30), nullable=True)
+    country = db.Column(db.String(30), nullable=True)
+    zipcode = db.Column(db.String(30), nullable=True)
+    phone = db.Column(db.String(20), unique=True, nullable=True)
+
     role_id = db.Column(db.Integer, db.ForeignKey('role.id'))
 
     def __init__(self, **kwargs):
@@ -22,7 +37,7 @@ class User(UserMixin, db.Model):
                 self.role = Role.query.filter_by(default=True).first()
 
     def __repr__(self) -> str:
-        return f'<User {self.username}>'
+        return f'<User {self.fname} {self.lname}>'
 
     @property
     def password(self):
@@ -40,6 +55,30 @@ class User(UserMixin, db.Model):
 
     def is_administrator(self):
         return self.can(Permission.ADMINISTER)
+
+    def avatar(self, size):
+        digest = md5(self.email.lower().encode('utf-8')).hexdigest()
+        return f'https://www.gravatar.com/avatar/{digest}?d=identicon&s={size}'
+
+    def generate_confirmation_token(self):
+        s = Serializer(current_app.config['SECRET_KEY'])
+        return s.dumps({"confirm": self.id})
+
+    def confirm(self, token):
+        s = Serializer(current_app.config['SECRET_KEY'])
+        try:
+            data = s.loads(token)
+        except:
+            return False
+
+        if data.get("confirm") != self.id:
+            return False
+
+        self.confirmed = True
+        self.confirmed_on = datetime.now()
+        db.session.add(self)
+        db.session.commit()
+        return True
 
 
 class AnonymousUser(AnonymousUserMixin):

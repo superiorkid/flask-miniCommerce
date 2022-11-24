@@ -2,8 +2,8 @@
 	<!--- Navbar --->
 	<nav class="navbar navbar-expand-lg">
 		<div class="container">
-			<a class="navbar-brand text-white" href="#">Flask-Boilerplate</a>
-			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#nvbCollapse" aria-controls="nvbCollapse">
+			<a class="navbar-brand text-white" href="#">Flask-<span style="color:chartreuse">mini</span>Commerce</a>
+			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#nvbCminiCommerceollapse" aria-controls="nvbCollapse">
 				<span class="navbar-toggler-icon"></span>
 			</button>
 
@@ -11,7 +11,7 @@
 			<div class="collapse navbar-collapse" id="nvbCollapse">
 				<ul class="navbar-nav ml-auto">
 					<li class="nav-item pl-1 {% if page == "index" %} active {% endif %}">
-						<a class="nav-link" href="{{ url_for("main.index") }}"><i class="fa fa-home fa-fw mr-1"></i>Home</a>
+						<a class="nav-link" href="{{ url_for("products.show_product") }}"><i class="fa fa-home fa-fw mr-1"></i>Home</a>
 					</li>
 
           {% if current_user.is_authenticated %}

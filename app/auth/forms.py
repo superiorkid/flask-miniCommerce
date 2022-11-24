@@ -17,20 +17,18 @@ class LoginForm(FlaskForm):
 class RegisterForm(FlaskForm):
     email = StringField("Email", validators=[DataRequired(), Email()], render_kw={
                         "placeholder": "Email"})
-    username = StringField("Username", validators=[Regexp(
-        '^[A-Za-z][A-Za-z0-9_.]*$', 0, 'Usernames must have only letters, numbers, dots or underscores'), DataRequired()], render_kw={"placeholder": "Username"})
     password = PasswordField("Pasword", validators=[DataRequired(), EqualTo(
         "confirm_password", "Password must match.")], render_kw={"placeholder": "Password"})
     confirm_password = PasswordField("Confirm Password", render_kw={
                                      "placeholder": "Confirm Password"})
-    submit = SubmitField("Simpan")
+    fname = StringField("First Name", validators=[DataRequired()], render_kw={
+                        "placeholder": "First Name"})
+    lname = StringField('Last Name', validators=[DataRequired()], render_kw={
+                        "placeholder": "Last Name"})
+
+    submit = SubmitField("Confirm")
 
     def validate_email(self, email):
         email = User.query.filter_by(email=email.data).first()
         if email:
             raise ValidationError("Email already registered.")
-
-    def validate_username(self, username):
-        username = User.query.filter_by(username=username.data).first()
-        if username:
-            raise ValidationError("Username already registered.")

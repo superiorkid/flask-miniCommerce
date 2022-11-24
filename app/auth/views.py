@@ -1,5 +1,6 @@
 from flask import render_template, flash, redirect, url_for, request, abort
 from flask_login import login_user, current_user, login_required, logout_user
+from ..email import send_mail
 
 from . import auth
 from .forms import LoginForm, RegisterForm
@@ -39,12 +40,16 @@ def signup():
 
     if form.validate_on_submit():
         try:
-            user = User(username=form.username.data,
-                        email=form.email.data, password=form.password.data)
+            user = User(email=form.email.data, password=form.password.data,
+                        fname=form.fname.data, lname=form.lname.data)
 
             db.session.add(user)
             db.session.commit()
-            flash("New user register successfully")
+
+            token = user.generate_confirmation_token()
+            send_mail(user.email, "Confirmation Your Account!",
+                      'auth/email/confirm', token=token)
+            flash("A confirmation email has been sent to you by email.")
             return redirect(url_for('main.index'))
         except:
             abort(500)
@@ -57,4 +62,18 @@ def signup():
 def signout():
     logout_user()
     flash("Successfully user logout")
+    return redirect(url_for('main.index'))
+
+
+@auth.get('/confirm/<token>')
+@login_required
+def confirm(token):
+    if current_user.confirmed:
+        return redirect(url_for('main.index'))
+
+    if current_user.confirm(token):
+        flash("You have confirmed your account. Thanks!")
+    else:
+        flash('The confirmation link is invalid or has expired.')
+
     return redirect(url_for('main.index'))
