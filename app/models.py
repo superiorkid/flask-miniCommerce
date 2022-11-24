@@ -110,7 +110,8 @@ class Role(db.Model):
     @staticmethod
     def insert_roles():
         roles = {
-            'User': (Permission.USERS, True),
+            'User': (Permission.SHOPPING, True),
+            'Operator': (Permission.SHOPPING | Permission.PRODUCT_MANAGEMENT, False),
             'Administrator': (0xff, False)
         }
 
@@ -125,5 +126,6 @@ class Role(db.Model):
 
 
 class Permission:
-    USERS = 0x01
+    SHOPPING = 0x01
+    PRODUCT_MANAGEMENT = 0x02
     ADMINISTER = 0x80
