@@ -11,16 +11,21 @@
 			<div class="collapse navbar-collapse" id="nvbCollapse">
 				<ul class="navbar-nav ml-auto">
 					<li class="nav-item pl-1 {% if page == "index" %} active {% endif %}">
-						<a class="nav-link" href="{{ url_for("products.show_product") }}"><i class="fa fa-home fa-fw mr-1"></i>Home</a>
+						<a class="nav-link" href="{{ url_for("main.index") }}"><i class="fa fa-home fa-fw mr-1"></i>Home</a>
 					</li>
 
           {% if current_user.is_authenticated %}
 						{% if current_user.is_administrator() %}
-							<li class="nav-item pl-1 {% if page == "admin" %} active {% endif %}">
-								<a class="nav-link" href="{{ url_for('main.admin_page') }}"><i class="fa fa-th-list fa-fw mr-1"></i>Admin</a>
+							<li class="nav-item pl-1">
+								<a class="nav-link" href="{{ url_for('admin.admin') }}"><i class="fa fa-th-list fa-fw mr-1"></i>Admin</a>
 							</li>
 						{% endif %}
 
+						{% if current_user.can(Permission.PRODUCT_MANAGEMENT)  %}
+							<li class="nav-item pl-1">
+								<a class="nav-link" href="{{ url_for('products.show_product') }}"><i class="fa fa-th-list fa-fw mr-1"></i>Product</a>
+							</li>
+						{% endif %}
           <li class="nav-item pl-1 ">
 						<a class="nav-link" href="{{ url_for('auth.signout') }}"><i class="fa fa-th-list fa-fw mr-1"></i>Sign Out</a>
 					</li>

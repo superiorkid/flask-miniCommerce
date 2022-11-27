@@ -1,5 +1,5 @@
 from flask_login import login_required
-from flask import redirect, url_for
+from flask import render_template
 
 from . import main
 
@@ -7,4 +7,4 @@ from . import main
 @main.get('/')
 @login_required
 def index():
-    return "show all products user"
+    return render_template('index.html')

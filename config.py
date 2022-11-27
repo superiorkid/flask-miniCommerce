@@ -3,8 +3,11 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
+basedir = os.getcwd()
+
 
 class Config(object):
+
     DEBUG = False
     SECRET_KEY = os.urandom(16)
     SQLALCHEMY_TRACK_MODIFICATIONS = False
@@ -15,6 +18,15 @@ class Config(object):
     MAIL_USE_SSL = True
     MAIL_USERNAME = "mailtestingforstudy@gmail.com"
     MAIL_PASSWORD = 'oqrgqffrjsrstayx'
+
+    # theme
+    BOOTSTRAP_BOOTSWATCH_THEME = 'sandstone'
+
+    # ckeditor
+    CKEDITOR_PKG_TYPE = "basic"
+
+    # storing file upload
+    UPLOAD_FOLDER = os.path.join(basedir, 'app/static/uploads')
 
 
 class ProductionConfig(Config):
