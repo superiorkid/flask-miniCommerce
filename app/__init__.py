@@ -8,6 +8,7 @@ from flask_ckeditor import CKEditor
 
 from config import DevelopmentConfig
 from .errors import error_handlers
+from .utility.jinja2_filter.global_filter import filter_list
 
 bootstrap = Bootstrap4()
 db = SQLAlchemy()
@@ -30,11 +31,6 @@ def create_app():
     mail.init_app(app)
     ckeditor.init_app(app)
 
-    # jinja global filter
-    @app.template_filter()
-    def currency_format(value):
-        return format(int(value), ',d')
-
     # import blueprint
     from .auth import auth as auth_blueprint
     from .products import products as product_blueprint
@@ -49,5 +45,8 @@ def create_app():
 
     # error blueprint
     error_handlers(app, db)
+
+    # jinja2 global filter
+    filter_list(app)
 
     return app
