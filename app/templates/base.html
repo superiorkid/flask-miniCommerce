@@ -31,9 +31,10 @@
   {% endwith %}
   
   {% block content %}{% endblock content %}
+  
+  {{bootstrap.load_js()}}
 
   {% block scripts %}{% endblock scripts %}
 
-  {{bootstrap.load_js()}}
 </body>
 </html>
