@@ -7,7 +7,7 @@ from app.models import User
 
 class LoginForm(FlaskForm):
     email = StringField("Email", validators=[
-                        DataRequired(), Email()], render_kw={"placeholder": "Email"})
+                        DataRequired(), Email()], render_kw={"placeholder": "Email", "autofocus": True})
     password = PasswordField("Password", validators=[
                              DataRequired()], render_kw={"placeholder": "Password"})
     remember_me = BooleanField("Keep me signed in")
@@ -16,7 +16,7 @@ class LoginForm(FlaskForm):
 
 class RegisterForm(FlaskForm):
     email = StringField("Email", validators=[DataRequired(), Email()], render_kw={
-                        "placeholder": "Email"})
+                        "placeholder": "Email", "autofocus": True})
     password = PasswordField("Pasword", validators=[DataRequired(), EqualTo(
         "confirm_password", "Password must match.")], render_kw={"placeholder": "Password"})
     confirm_password = PasswordField("Confirm Password", render_kw={

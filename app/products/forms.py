@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileField, FileRequired, FileAllowed
-from wtforms import StringField, SubmitField, IntegerField
+from wtforms import StringField, SubmitField
 from wtforms.validators import DataRequired, Length, ValidationError
 from wtforms.widgets import NumberInput
 from flask_ckeditor import CKEditorField
@@ -15,7 +15,7 @@ class ProductForm(FlaskForm):
     product_name = StringField("Product Name", validators=[
                                DataRequired(), Length(0, 100)])
     description = CKEditorField("Description", validators=[DataRequired()])
-    image = FileField("Choose Image...", validators=[
+    image = FileField("Select Product Image...", validators=[
         FileRequired(), FileAllowed(['png', 'jpg', 'jpeg'], 'png/jpg/jpeg Only!')])
     quantity = StringField("Quantity", validators=[
                            DataRequired()], widget=NumberInput(min=0))
@@ -28,14 +28,14 @@ class ProductForm(FlaskForm):
             raise ValidationError("Sku is available")
 
 
-class EditProductForm(ProductForm):
+class EditProductForm(FlaskForm):
     sku = StringField("Sku", validators=[
                       DataRequired(), Length(1, 50)])
     product_name = StringField("Product Name", validators=[
                                DataRequired(), Length(0, 100)])
     description = CKEditorField("Desctiption", validators=[
                                 DataRequired()])
-    image = FileField("Choose Image...", validators=[
+    image = FileField("Select Product Image...", validators=[
         FileRequired()])
     quantity = StringField("Quantity", validators=[
                            DataRequired()], widget=NumberInput(min=0))
