@@ -4,7 +4,7 @@
 
 {% block content %}
   <div class="container mt-5">
-    <h1 class="font-weight-bold">All Product</h1>
+    <h1 class="font-weight-bold ml-2">All Product</h1>
     <hr>
 
     <span class="d-inline-block" tabindex="0" data-toggle="tooltip" title="Add Product">
@@ -30,7 +30,7 @@
             <td>Rp.{{ product.regural_price | currency_format }}</td>
             <td>
               <span class="d-inline-block" tabindex="0" data-toggle="tooltip" title="Detail Product">
-                <a href="#detail" class="btn btn-sm btn-info">{{ render_icon('file-earmark-richtext-fill') }}</a>
+                <a href="{{ url_for('products.detail_product', id=product.id) }}" class="btn btn-sm btn-info">{{ render_icon('file-earmark-richtext-fill') }}</a>
               </span>
               <span class="d-inline-block" tabindex="0" data-toggle="tooltip" title="Delete Product">
                 <a href="{{ url_for('products.delete_product', id=product.id) }}" class="btn btn-sm btn-danger">{{ render_icon('trash-fill') }}</a>

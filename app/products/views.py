@@ -68,6 +68,9 @@ def edit_product(id):
             filename = secure_filename(f.filename)
             products.image = filename
 
+            if not os.path.exists(current_app.config['UPLOAD_FOLDER']):
+                os.makedirs(current_app.config['UPLOAD_FOLDER'])
+
             f.save(os.path.join(current_app.config['UPLOAD_FOLDER'], filename))
 
         db.session.commit()
@@ -85,9 +88,9 @@ def edit_product(id):
 
 @products.get('/<int:id>/detail')
 @login_required
-@permission_required(Permission.PRODUCT_MANAGEMENT)
 def detail_product(id):
-    return render_template('product/detail_product.html')
+    product = db.get_or_404(Product, id)
+    return render_template('products/detail_product.html', product=product)
 
 
 @products.get('/<int:id>/delete')
@@ -95,6 +98,11 @@ def detail_product(id):
 @permission_required(Permission.PRODUCT_MANAGEMENT)
 def delete_product(id):
     product = db.get_or_404(Product, id)
+
+    path = os.path.join(current_app.config['UPLOAD_FOLDER'], product.image)
+    if os.path.exists(path):
+        os.remove(path)
+
     db.session.delete(product)
     db.session.commit()
     flash("Product delete successfully.")

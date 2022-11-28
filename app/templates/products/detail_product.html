@@ -1,1 +1,61 @@
-<h1>detail product</h1>
+{% extends "base.html" %}
+
+{% block content %}
+  <div class="container mt-5 w-75">
+    <h1 class="font-weight-bold ml-2">Detail Product</h1>
+    <hr>
+
+    <div class="row">
+      <div class="col-md-6 px-4">
+        <img src="{{ url_for('static', filename="uploads/") + product.image }}" alt="Image Product" class="img-responsive img-thumbnail">
+      </div>
+      <div class="col-md-6">
+        <blockquote class="blockquote p-3">
+          <p class="mb-0 h3 font-weight-bold">{{ product.product_name|title }}</p>
+          <footer class="blockquote-footer">Rp. {{ product.regural_price|currency_format}}</footer>
+        </blockquote>
+
+        <table class="table table-bordered mb-5">
+          <thead>
+            <tr>
+              <th class="text-right">SKU</th>
+              <td>{{product.sku}}</td>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th class="text-right">Quantity</th>
+              <td>{{ product.quantity }}</td>
+            </tr>
+          </tbody>
+        </table>
+
+        {# tabs #}
+         <ul class="nav nav-tabs" id="myTab" role="tablist">
+          <li class="nav-item" role="presentation">
+            <button class="nav-link active" id="home-tab" data-toggle="tab" data-target="#home" type="button" role="tab" aria-controls="home" aria-selected="true">Description</button>
+          </li>
+        </ul>
+        <div class="tab-content" id="myTabContent">
+          <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+            <div class="p-3">
+              <p>
+                {{product.description | safe}}
+              </p>
+            </div>
+          </div>
+        </div>
+        {# close tabs #}
+
+      {% if current_user.is_administrator() %}
+        <a href="{{ url_for('products.edit_product', id=product.id) }}" class="btn btn-info btn-block mb-2">Edit</a>      
+      {% endif %}
+      <a href="{{ url_for('products.edit_product', id=product.id) }}" class="btn btn-warning btn-block mb-2">Add to Cart</a>
+      <button onclick="history.back()" class="btn btn-secondary btn-block">Back</button>
+
+      </div>
+
+    </div>
+
+  </div>
+{% endblock content %}link
