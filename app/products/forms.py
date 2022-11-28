@@ -35,8 +35,7 @@ class EditProductForm(FlaskForm):
                                DataRequired(), Length(0, 100)])
     description = CKEditorField("Desctiption", validators=[
                                 DataRequired()])
-    image = FileField("Select Product Image...", validators=[
-        FileRequired()])
+    image = FileField("Select Product Image...")
     quantity = StringField("Quantity", validators=[
                            DataRequired()], widget=NumberInput(min=0))
     regular_price = BetterDecimalField("Price", validators=[DataRequired()])
