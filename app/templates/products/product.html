@@ -11,34 +11,37 @@
       <a href="{{ url_for('products.insert_product') }}" class="btn btn-sm btn-success mb-3 ml-2">{{ render_icon("plus-circle-fill") }}</a>
     </span>
     
-    <table id="data" class="table table-hover">
-      <thead>
-        <tr>
-          <th scope="col">#</th>
-          <th scope="col">Name</th>
-          <th scope="col">Quantity</th>
-          <th scope="col">Price</th>
-          <th>Action</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for product in products %}
+    <div class="table-responsive">
+      <table id="data" class="table table-hover">
+        <caption>List of Product</caption>
+        <thead>
           <tr>
-            <td>{{ loop.index }}</td>
-            <td>{{ product.product_name|title }}</td>
-            <td>{{ product.quantity }}</td>
-            <td>Rp.{{ product.regural_price | currency_format }}</td>
-            <td>
-              <span class="d-inline-block" tabindex="0" data-toggle="tooltip" title="Detail Product">
-                <a href="{{ url_for('products.detail_product', id=product.id) }}" class="btn btn-sm btn-info">{{ render_icon('file-earmark-richtext-fill') }}</a>
-              </span>
-              <span class="d-inline-block" tabindex="0" data-toggle="tooltip" title="Delete Product">
-                <a href="{{ url_for('products.delete_product', id=product.id) }}" class="btn btn-sm btn-danger">{{ render_icon('trash-fill') }}</a>
-              </span>
-            </td>
+            <th scope="col">#</th>
+            <th scope="col">Name</th>
+            <th scope="col">Quantity</th>
+            <th scope="col">Price</th>
+            <th>Action</th>
           </tr>
-        {% endfor %}
-      </tbody>
-    </table>
+        </thead>
+        <tbody>
+          {% for product in products %}
+            <tr>
+              <td>{{ loop.index }}</td>
+              <td>{{ product.product_name|title }}</td>
+              <td>{{ product.quantity }}</td>
+              <td>Rp.{{ product.regural_price | currency_format }}</td>
+              <td>
+                <span class="d-inline-block" tabindex="0" data-toggle="tooltip" title="Detail Product">
+                  <a href="{{ url_for('products.detail_product', id=product.id) }}" class="btn btn-sm btn-info">{{ render_icon('file-earmark-richtext-fill') }}</a>
+                </span>
+                <span class="d-inline-block" tabindex="0" data-toggle="tooltip" title="Delete Product">
+                  <a href="{{ url_for('products.delete_product', id=product.id) }}" class="btn btn-sm btn-danger">{{ render_icon('trash-fill') }}</a>
+                </span>
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
   </div>
 {% endblock content %}

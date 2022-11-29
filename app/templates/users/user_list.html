@@ -1,0 +1,45 @@
+{% from 'bootstrap4/utils.html' import render_icon %}
+
+{% extends "base.html" %}
+
+{% block content %}
+  <div class="container mt-5 pb-5">
+    <h1 class="font-weight-bold ml-2">List User</h1>
+    <hr>
+    
+    <div class="table-responsive">
+      <table id="data" class="table table-hover">
+        <caption>List of User</caption>
+        <thead>
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">Email</th>
+            <th scope="col">Address</th>
+            <th scope="col">Phone</th>
+            <th scope="col">Role</th>
+            <th scope="col">Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for user in users %}
+            <tr>
+              <td>{{ loop.index }}</td>
+              <td>{{ user.email }}</td>
+              <td>{{ user.address }}</td>
+              <td>{{ user.phone }}</td>
+              <td>{{ user.role.name }}</td>
+              <td>
+                <span class="d-inline-block" tabindex="0" data-toggle="tooltip" title="Detail Product">
+                  <a href="{{ url_for('users.edit_profile_admin', id=user.id) }}" class="btn btn-sm btn-info">{{ render_icon('file-earmark-richtext-fill') }}</a>
+                </span>
+                <span class="d-inline-block" tabindex="0" data-toggle="tooltip" title="Delete Product">
+                  <a href="{{ url_for('users.user_delete', id=user.id) }}" class="btn btn-sm btn-danger">{{ render_icon('trash-fill') }}</a>
+                </span>
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+{% endblock content %}

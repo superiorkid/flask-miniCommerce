@@ -24,7 +24,7 @@ class User(UserMixin, db.Model):
     state = db.Column(db.String(30), nullable=True)
     country = db.Column(db.String(30), nullable=True)
     zipcode = db.Column(db.String(30), nullable=True)
-    phone = db.Column(db.String(20), unique=True, nullable=True)
+    phone = db.Column(db.String(20), nullable=True)
 
     role_id = db.Column(db.Integer, db.ForeignKey('role.id'))
 
