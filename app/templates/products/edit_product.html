@@ -6,7 +6,7 @@
 
 {% block content %}
 
-  <div class="container mt-5 w-50">
+  <div class="container mt-5 w-50 pb-5">
     <h1 class="font-weight-bold">Edit Product</h1>
     <hr>
     <form method="post"  enctype="multipart/form-data">
@@ -41,7 +41,7 @@
       </div>
       <div class="form-group">
         <div class="custom-file">
-          {{form.image(class="custom-file-input", id="input-file")}}
+          {{form.image(class="custom-file-input", id="input-file", title="")}}
           {{form.image.label(class="custom-file-label", for="input-file")}}
         </div>  
       </div>
@@ -67,21 +67,7 @@
 {% block scripts %}
 
   <script>
-    // Get a reference to our file input
-    const fileInput = document.querySelector('input[type="file"]');
-
-    // Create a new File object
-    const myFile = new File(['Image File'], '{{ images }}', {
-        type: 'img',
-        lastModified: new Date(),
-    });
-
-    // Now let's create a DataTransfer to get a FileList
-    const dataTransfer = new DataTransfer();
-    dataTransfer.items.add(myFile);
-    fileInput.files = dataTransfer.files;
-
-    let path = fileInput.value
+    let path = "{{ image_path }}"
     let filename = path.replace(/^.*[\\\/]/, '')
 
     // replace the choose file label

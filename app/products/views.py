@@ -26,18 +26,21 @@ def show_product():
 @permission_required(Permission.PRODUCT_MANAGEMENT)
 def insert_product():
     form = ProductForm()
+    UPLOAD_DIR = current_app.config['UPLOAD_FOLDER']
 
     if form.validate_on_submit():
         f = form.image.data
-        filename = secure_filename(f.filename)
+        filename = f"product-img-{form.sku.data}-{f.filename}"
+        new_filename = secure_filename(filename)
+
+        if not os.path.exists(UPLOAD_DIR):
+            os.makedirs(UPLOAD_DIR)
+
+        f.save(os.path.join(
+            current_app.config['UPLOAD_FOLDER'], new_filename))
 
         new_product = Product(sku=form.sku.data, product_name=form.product_name.data, description=form.description.data,
-                              image=filename, quantity=form.quantity.data, regural_price=form.regular_price.data)
-
-        if not os.path.exists(current_app.config['UPLOAD_FOLDER']):
-            os.makedirs(current_app.config['UPLOAD_FOLDER'])
-
-        f.save(os.path.join(current_app.config['UPLOAD_FOLDER'], filename))
+                              image=new_filename, quantity=form.quantity.data, regural_price=form.regular_price.data)
 
         db.session.add(new_product)
         db.session.commit()
@@ -53,25 +56,29 @@ def insert_product():
 @login_required
 @permission_required(Permission.PRODUCT_MANAGEMENT)
 def edit_product(id):
+    UPLOAD_DIR = current_app.config['UPLOAD_FOLDER']
     form = EditProductForm()
     products = db.get_or_404(Product, id)
 
     if form.validate_on_submit():
+        if form.image.data:
+            f = form.image.data
+            head, tail = os.path.split(f.filename)
+            new_filename = secure_filename(
+                f"product-img-{form.sku.data}-{tail}")
+
+            if not os.path.exists(UPLOAD_DIR):
+                os.makedirs(UPLOAD_DIR)
+
+            f.save(os.path.join(UPLOAD_DIR, new_filename))
+
+            products.image = new_filename
+
         products.sku = form.sku.data
         products.product_name = form.product_name.data
         products.description = form.description.data
         products.quantity = form.quantity.data
         products.regural_price = form.regular_price.data
-
-        if form.image.data:
-            f = form.image.data
-            filename = secure_filename(f.filename)
-            products.image = filename
-
-            if not os.path.exists(current_app.config['UPLOAD_FOLDER']):
-                os.makedirs(current_app.config['UPLOAD_FOLDER'])
-
-            f.save(os.path.join(current_app.config['UPLOAD_FOLDER'], filename))
 
         db.session.commit()
         flash("Product update successfully")
@@ -82,8 +89,10 @@ def edit_product(id):
     form.description.data = products.description
     form.quantity.data = products.quantity
     form.regular_price.data = products.regural_price
-    images = os.path.join(current_app.config['UPLOAD_FOLDER'], products.image)
-    return render_template('products/edit_product.html', form=form, products=products, images=images)
+    form.image.data = products.image
+
+    image_path = os.path.join(UPLOAD_DIR, products.image)
+    return render_template('products/edit_product.html', form=form, products=products, image_path=image_path)
 
 
 @products.get('/<int:id>/detail')
