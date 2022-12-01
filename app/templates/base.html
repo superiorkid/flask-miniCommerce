@@ -24,9 +24,12 @@
   {% include "includes/__nav.html" %}
   
   {% block content %}{% endblock content %}
+
+  {% include "includes/__footer.html" %}
   
   {{bootstrap.load_js()}}
   {{ toastr.include_toastr_js() }}
+
 
   {% block scripts %}{% endblock scripts %}
 
