@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <div class="container mt-5 pb-5">
+    <h1 class="font-weight-bold ml-2">List Product Cart</h1>
+    <hr>
+
+    <div class="row">
+      <div class="col-md-8">
+        
+        <div class="card">
+          <div class="card-header">
+            <h5 class="card-title">Your Order</h5>
+          </div>
+          
+          <div class="card-body table-responsive">
+            <table class="table table-striped">
+              <thead>
+                <th>#</th>
+                <th>Product</th>
+                <th>Price</th>
+                <th>Quantity</th>
+                <th>Action</th>
+              </thead>
+              <tbody>
+
+              {% for cart in carts %}
+                <tr>
+                  <td>{{ loop.index }}</td>
+                  <td>
+                    <img src="{{ url_for('static', filename="uploads/" + cart.image) }}" alt="" width="100" height="100">
+                    {{cart.product_name}}
+                  </td>
+                  <td>
+                    Rp.<span id="price">{{cart.regural_price}}</span>
+                  </td>
+                  <td>
+                    <input type="number" min="1" max="{{ cart.quantity }}" value="1" id="quantity">
+                  </td>
+                  <td>
+                    <button onclick="removeFromCart({{cart.id}})" class="btn btn-sm btn-danger">Remove</button>
+                  </td>
+                </tr>
+              {% endfor %}
+
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="col-md-4">
+
+          <div class="card">
+            <div class="card-header">
+              <h4 class="card-title">Checkout</h4>
+            </div>
+            <div class="card-body">
+              <div class="table-responsive">
+                <table class="table table-striper">
+                  <thead>
+                    <tr>
+                      <th>Product</th>
+                      <th>Subtotal</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% for cart in carts %}
+                      <tr>
+                        <td>{{cart.product_name}}</td>
+                        <td>
+                          <span class="subtotal"></span>
+                        </td>
+                      </tr>
+                    {% endfor %}
+                  </tbody>
+                  
+                  <tfoot>
+                    <tr>
+                      <th>Total</th>
+                      <td>Rp.<span class="total">5,000,000</span></td>
+                    </tr>
+                  </tfoot>
+                </table>
+
+                <a href="#checkout" class="btn btn-success btn-block">Checkout</a>
+              </div>
+            </div>
+          </div>
+
+      </div>
+    </div>
+  </div>
+
+{% endblock content %}
+
+{% block scripts %}
+  <script src="{{ url_for('static', filename="js/cart.js") }}"></script>
+{% endblock scripts %}

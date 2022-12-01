@@ -7,6 +7,12 @@ from datetime import datetime
 
 from . import login_manager, db
 
+cart_item = db.Table(
+    "cart_item",
+    db.Column('product_id', db.Integer, db.ForeignKey('product.id')),
+    db.Column('user_id', db.Integer, db.ForeignKey('user.id'))
+)
+
 
 class User(UserMixin, db.Model):
     # user auth
@@ -23,10 +29,12 @@ class User(UserMixin, db.Model):
     city = db.Column(db.String(30), nullable=True)
     state = db.Column(db.String(30), nullable=True)
     country = db.Column(db.String(30), nullable=True)
-    zipcode = db.Column(db.String(30), nullable=True)
+    zipcode = db.Column(db.String(10), nullable=True)
     phone = db.Column(db.String(20), nullable=True)
 
     role_id = db.Column(db.Integer, db.ForeignKey('role.id'))
+    products = db.relationship(
+        "Product", secondary=cart_item, backref="user")
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)

@@ -1,6 +1,6 @@
 
-from flask import request, render_template, current_app, flash, redirect, url_for
-from flask_login import login_required
+from flask import request, render_template, current_app, flash, redirect, url_for, jsonify
+from flask_login import login_required, current_user
 from werkzeug.utils import secure_filename
 
 import os
@@ -8,7 +8,7 @@ import os
 from .. import db
 from ..decorators import permission_required
 from . import products
-from ..models import Permission, Product
+from ..models import Permission, Product, User
 from .forms import ProductForm, EditProductForm
 
 
@@ -99,16 +99,18 @@ def edit_product(id):
 @login_required
 def detail_product(id):
     product = db.get_or_404(Product, id)
-    return render_template('products/detail_product.html', product=product)
+    all_product = Product.query.all()
+    return render_template('products/detail_product.html', product=product, all_product=all_product)
 
 
 @products.get('/<int:id>/delete')
 @login_required
 @permission_required(Permission.PRODUCT_MANAGEMENT)
 def delete_product(id):
+    UPLOAD_DIR = current_app.config['UPLOAD_FOLDER']
     product = db.get_or_404(Product, id)
 
-    path = os.path.join(current_app.config['UPLOAD_FOLDER'], product.image)
+    path = os.path.join(UPLOAD_DIR, product.image)
     if os.path.exists(path):
         os.remove(path)
 

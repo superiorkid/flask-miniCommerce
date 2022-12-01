@@ -58,12 +58,23 @@
       {% if current_user.is_administrator() %}
         <a href="{{ url_for('products.edit_product', id=product.id) }}" class="btn btn-info btn-block mb-2">Edit</a>      
       {% endif %}
-      <a href="#addtocart" class="btn btn-warning btn-block mb-2">Add to Cart</a>
-      <button onclick="history.back()" class="btn btn-secondary btn-block">Back</button>
+
+        
+      {% if product in current_user.products %}
+        <button class="btn btn-danger btn-block" onclick="removeFromCart({{product.id}})">Remove from Cart</button>
+      {% else %}
+        <button class="btn btn-warning btn-block" onclick="addToCart({{product.id}})">Add to Cart</button>
+      {% endif %}
+
+        <button onclick="history.back()" class="btn btn-secondary btn-block">Back</button>
 
       </div>
-
-    </div>
+    </div> 
 
   </div>
-{% endblock content %}link
+{% endblock content %}
+
+
+{% block scripts %}
+  <script src="{{ url_for('static', filename="js/cart.js") }}"></script>
+{% endblock scripts %}

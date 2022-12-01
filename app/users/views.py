@@ -11,6 +11,14 @@ from ..models import User, Role
 
 @users.get('/')
 @login_required
+@admin_required
+def user_list():
+    users = User.query.all()
+    return render_template('users/user_list.html', users=users)
+
+
+@users.get('/me')
+@login_required
 def user_profile():
     user = User.query.filter_by(id=current_user.id).first()
     return render_template('users/profile.html', user=user)
@@ -46,14 +54,6 @@ def edit_profile():
     form.zipcode.data = user.zipcode
     form.phone.data = user.phone
     return render_template('users/edit_profile.html', form=form, user=user)
-
-
-@users.get('/list')
-@login_required
-@admin_required
-def user_list():
-    users = User.query.all()
-    return render_template('users/user_list.html', users=users)
 
 
 @ users.get('/<int:id>/edit')

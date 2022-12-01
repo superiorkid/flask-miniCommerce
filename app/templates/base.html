@@ -14,25 +14,19 @@
   {% block styles %}{% endblock styles %}
 
   <link rel="stylesheet" href="{{ url_for('static', filename="css/__nav.css") }}">
+
   {{ bootstrap.load_css() }}
+  {{ toastr.include_jquery() }}
+  {{ toastr.include_toastr_css() }}
+  {{ toastr.message() }}
 </head>
 <body>
   {% include "includes/__nav.html" %}
-
-  {# flash message #}
-  {% with messages = get_flashed_messages() %}
-    {% if messages %}
-      {% for message in messages %}
-        <div class="alert alert-dark" role="alert">
-          {{message}}
-        </div>
-      {% endfor %}
-    {% endif %}
-  {% endwith %}
   
   {% block content %}{% endblock content %}
   
   {{bootstrap.load_js()}}
+  {{ toastr.include_toastr_js() }}
 
   {% block scripts %}{% endblock scripts %}
 

@@ -49,7 +49,7 @@ def signup():
             token = user.generate_confirmation_token()
             send_mail(user.email, "Confirmation Your Account!",
                       'auth/email/confirm', token=token)
-            flash("A confirmation email has been sent to you by email.")
+            flash("A confirmation email has been sent to you by email.", "info")
             return redirect(url_for('main.index'))
         except:
             abort(500)
@@ -72,9 +72,9 @@ def confirm(token):
         return redirect(url_for('main.index'))
 
     if current_user.confirm(token):
-        flash("You have confirmed your account. Thanks!")
+        flash("You have confirmed your account. Thanks!", "success")
     else:
-        flash('The confirmation link is invalid or has expired.')
+        flash('The confirmation link is invalid or has expired.', "info")
 
     return redirect(url_for('main.index'))
 
@@ -99,5 +99,5 @@ def resend_confirmation():
     token = current_user.generate_confirmation_token()
     send_mail(current_user.email, "Confirm Your Account!",
               'auth/email/confirm', token=token)
-    flash("A new confirmation email has beed sent to you by email.")
+    flash("A new confirmation email has beed sent to you by email.", "info")
     return redirect(url_for('main.index'))
