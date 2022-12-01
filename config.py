@@ -28,6 +28,9 @@ class Config(object):
     # storing file upload
     UPLOAD_FOLDER = os.path.join(basedir, 'app/static/uploads')
 
+    # toastr
+    TOASTR_POSITION_CLASS = "toast-bottom-right"
+
 
 class ProductionConfig(Config):
     DEBUG = False
