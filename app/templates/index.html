@@ -1,12 +1,40 @@
 {% extends "base.html" %}
 
+{% block styles %}
+  <link rel="stylesheet" href="{{ url_for('static', filename="css/index.css") }}">
+{% endblock styles %}
+
 {% block content %}
-<div class="jumbotron">
-  <div class="container">
-    <h1 class="display-4">Flask-miniCommerce</h1>
-    <p class="lead">This is a simple hero unit, a simple jumbotron-style component for calling extra attention to featured content or information.</p>
-    <hr class="my-4">
-    <p>It uses utility classes for typography and spacing to space content out within the larger container.</p>
+<div class="container mb-4">
+  <div class="jumbotron">
+    <div class="container">
+      <h1 class="display-4">Flask-miniCommerce</h1>
+      <p class="lead">This is a simple hero unit, a simple jumbotron-style component for calling extra attention to featured content or information.</p>
+      <hr class="my-4">
+      <p>It uses utility classes for typography and spacing to space content out within the larger container.</p>
+    </div>
   </div>
+
+  <div class="row">
+  {% for product in products %}
+        <div class="col-6 col-sm-6 col-md-4 col-lg-3 col-lg-five mb-4">
+            <figure class="card card-product-grid h-100">
+                <div class="img-wrap rounded bg-gray-light">
+                    {# <span class="topbar">
+                        <span class="badge tag-discount">-20%</span>
+                    </span> #}
+                    <img class="mix-blend-mode" src="{{ url_for('static', filename="uploads/" + product.image) }}" alt="Funko Pop! Spiderman Integrated Suit - Marvel: Spiderman No Way Home">
+                </div>
+                <figcaption class="card-product-info">
+                    <a href="" class="title">{{ product.product_name }}</a>
+                    <div class="price-wrap">
+                        <span class="price">Rp.{{ product.regural_price | currency_format }}</span>
+                    </div>
+                    <a href="{{ url_for('products.detail_product', id=product.id) }}" class="btn btn-sm btn-outline-danger w-100 mt-2">Show Detail</a>
+                </figcaption>
+            </figure>
+        </div>
+  {% endfor %}
+    </div>
 </div>
 {% endblock content %}
