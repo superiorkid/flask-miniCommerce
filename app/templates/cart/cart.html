@@ -1,14 +1,13 @@
+{% from 'bootstrap4/utils.html' import render_icon %}
+
 {% extends "base.html" %}
 
 {% block content %}
   <div class="container mt-5 pb-5">
     <h1 class="font-weight-bold ml-2">List Product Cart</h1>
     <hr>
-
-    <div class="row">
-      <div class="col-md-8">
         
-        <div class="card">
+        <div class="card mb-2">
           <div class="card-header">
             <h5 class="card-title">Your Order</h5>
           </div>
@@ -20,76 +19,45 @@
                 <th>Product</th>
                 <th>Price</th>
                 <th>Quantity</th>
-                <th>Action</th>
+                <th>Cost</th>
+                <th>&nbsp;</th>
               </thead>
               <tbody>
-
               {% for cart in carts %}
-                <tr>
+                <tr class="product">
                   <td>{{ loop.index }}</td>
                   <td>
-                    <img src="{{ url_for('static', filename="uploads/" + cart.image) }}" alt="" width="100" height="100">
+                    <img src="{{ url_for('static', filename="uploads/" + cart.image) }}" alt="" width="60" height="60">
                     {{cart.product_name}}
                   </td>
-                  <td>
-                    Rp.<span id="price">{{cart.regural_price}}</span>
+                  <td class="product-price">
+                    Rp.<span class="price" id="price">{{cart.regural_price}}</span>
                   </td>
-                  <td>
-                    <input type="number" min="1" max="{{ cart.quantity }}" value="1" id="quantity">
+                  <td class="product-quantity">
+                    <input type="number" min="1" max="{{ cart.quantity }}" value="1">
                   </td>
+                  <td class="product-cost">Rp.<span class="cost">{{cart.regural_price}}</span></td>
                   <td>
-                    <button onclick="removeFromCart({{cart.id}})" class="btn btn-sm btn-danger">Remove</button>
+                    <button onclick="removeFromCart({{cart.id}})" class="btn btn-sm btn-danger">{{ render_icon('trash-fill') }}</button>
                   </td>
                 </tr>
               {% endfor %}
-
               </tbody>
+              <tfoot>
+                <tr>
+                  <td>&nbsp;</td>
+                  <td>&nbsp;</td>
+                  <td>&nbsp;</td>
+                  <th>TOTAL</th>
+                  <td>
+                    Rp.<span id="total"></span>
+                  </td>
+                </tr>
+              </tfoot>
             </table>
           </div>
         </div>
 
-      </div>
-
-      <div class="col-md-4">
-
-          <div class="card">
-            <div class="card-header">
-              <h4 class="card-title">Checkout</h4>
-            </div>
-            <div class="card-body">
-              <div class="table-responsive">
-                <table class="table table-striper">
-                  <thead>
-                    <tr>
-                      <th>Product</th>
-                      <th>Subtotal</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {% for cart in carts %}
-                      <tr>
-                        <td>{{cart.product_name}}</td>
-                        <td>
-                          <span class="subtotal"></span>
-                        </td>
-                      </tr>
-                    {% endfor %}
-                  </tbody>
-                  
-                  <tfoot>
-                    <tr>
-                      <th>Total</th>
-                      <td>Rp.<span class="total">5,000,000</span></td>
-                    </tr>
-                  </tfoot>
-                </table>
-
-                <a href="#checkout" class="btn btn-success btn-block">Checkout</a>
-              </div>
-            </div>
-          </div>
-
-      </div>
     </div>
   </div>
 
@@ -97,4 +65,5 @@
 
 {% block scripts %}
   <script src="{{ url_for('static', filename="js/cart.js") }}"></script>
+  <script src="{{ url_for('static', filename="js/subtotal.js") }}"></script>
 {% endblock scripts %}

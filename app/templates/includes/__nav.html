@@ -27,7 +27,7 @@
 							</li>
 						{% endif %}
 					<li class="nav-item pl-1 ">
-						<a class="nav-link" href="{{ url_for('cart.cart_list') }}"><i class="fa fa-th-list fa-fw mr-1"></i>Cart</a>
+						<a class="nav-link" href="{{ url_for('cart.cart_list') }}"><i class="fa fa-th-list fa-fw mr-1"></i>Cart <span class="badge badge-light">{{ cart_item }}</span></a>
 					</li>
 					<li class="nav-item pl-1 ">
 						<a class="nav-link" href="{{ url_for('users.user_profile') }}"><i class="fa fa-th-list fa-fw mr-1"></i>Your Profile</a>
