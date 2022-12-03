@@ -1,3 +1,5 @@
+{% from 'bootstrap4/utils.html' import render_icon %}
+
 {% extends "base.html" %}
 
 {% block styles %}
@@ -5,24 +7,34 @@
 {% endblock styles %}
 
 {% block content %}
-<div class="container mb-4">
-  <div class="jumbotron">
-    <div class="container">
-      <h1 class="display-4">Flask-miniCommerce</h1>
-      <p class="lead">This is a simple hero unit, a simple jumbotron-style component for calling extra attention to featured content or information.</p>
-      <hr class="my-4">
-      <p>It uses utility classes for typography and spacing to space content out within the larger container.</p>
-    </div>
+
+ <div class="jumbotron">
+  <div class="container w-50">
+    <h1 class="display-4">Flask-miniCommerce</h1>
+    <p class="lead">This is a simple hero unit, a simple jumbotron-style component for calling extra attention to featured content or information.</p>
+    <hr class="my-4">
+    <p>It uses utility classes for typography and spacing to space content out within the larger container.</p>
   </div>
+</div>
+
+<div class="container mb-4">
+  <h3 class="font-weight-bold ml-3">All Product</h3>
+  <hr>
 
   <div class="row">
   {% for product in products %}
         <div class="col-6 col-sm-6 col-md-4 col-lg-3 col-lg-five mb-4">
             <figure class="card card-product-grid h-100">
                 <div class="img-wrap rounded bg-gray-light">
-                    {# <span class="topbar">
-                        <span class="badge tag-discount">-20%</span>
-                    </span> #}
+
+                    {# check if product in cart #}
+                    {% if product in current_user.products %}
+                    <span class="topbar">
+                        <span class="badge tag-discount">{{ render_icon("cart4") }}</span>
+                    </span>
+                    {% endif %}
+                    {# / check if product in cart #}
+
                     <img class="mix-blend-mode" src="{{ url_for('static', filename="uploads/" + product.image) }}" alt="Funko Pop! Spiderman Integrated Suit - Marvel: Spiderman No Way Home">
                 </div>
                 <figcaption class="card-product-info">
