@@ -7,6 +7,7 @@ from flask_mail import Mail
 from flask_ckeditor import CKEditor
 from flask_cors import CORS
 from flask_toastr import Toastr
+from flask_session import Session
 
 from config import DevelopmentConfig
 from .errors import error_handlers
@@ -19,6 +20,7 @@ mail = Mail()
 ckeditor = CKEditor()
 cors = CORS()
 toastr = Toastr()
+sess = Session()
 
 login_manager = LoginManager()
 login_manager.login_view = "auth.signin"
@@ -36,6 +38,7 @@ def create_app():
     ckeditor.init_app(app)
     cors.init_app(app)
     toastr.init_app(app)
+    sess.init_app(app)
 
     # import blueprint
     from .auth import auth as auth_blueprint

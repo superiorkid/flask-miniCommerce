@@ -1,4 +1,6 @@
 import os
+import redis
+
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -31,11 +33,21 @@ class Config(object):
     # toastr
     TOASTR_POSITION_CLASS = "toast-bottom-right"
 
+    # session
+    SESSION_TYPE = 'redis'
+    SESSION_PERMANENT = False
+    SESSION_USE_SIGNER = True
+    SESSION_REDIS = redis.from_url('redis://localhost:6379')
+
 
 class ProductionConfig(Config):
     DEBUG = False
     SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URI')
     IS_ADMIN = os.getenv("IS_ADMIN")
+
+    # MIDTRANS INTEGRATION
+    SERVER_KEY = os.getenv('MIDTRANS_SERVER_KEY')
+    CLIENT_KEY = os.getenv('MIDTRANS_CLIENT_KEY')
 
 
 class DevelopmentConfig(Config):
