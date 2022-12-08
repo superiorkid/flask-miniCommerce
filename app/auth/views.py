@@ -1,7 +1,7 @@
-from flask import render_template, flash, redirect, url_for, request, abort
+from flask import render_template, flash, redirect, url_for, request, abort, session
 from flask_login import login_user, current_user, login_required, logout_user
-from ..email import send_mail
 
+from ..email import send_mail
 from . import auth
 from .forms import LoginForm, RegisterForm
 from ..models import User
@@ -61,6 +61,7 @@ def signup():
 @login_required
 def signout():
     logout_user()
+    session.pop('cart', default=None)
     flash("Successfully user logout")
     return redirect(url_for('main.index'))
 

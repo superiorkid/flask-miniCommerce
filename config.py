@@ -45,10 +45,6 @@ class ProductionConfig(Config):
     SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URI')
     IS_ADMIN = os.getenv("IS_ADMIN")
 
-    # MIDTRANS INTEGRATION
-    SERVER_KEY = os.getenv('MIDTRANS_SERVER_KEY')
-    CLIENT_KEY = os.getenv('MIDTRANS_CLIENT_KEY')
-
 
 class DevelopmentConfig(Config):
     ENV = "development"
@@ -56,3 +52,7 @@ class DevelopmentConfig(Config):
     DEVELOPMENT = True
     SQLALCHEMY_DATABASE_URI = os.getenv("DATABASE_URI_DEV")
     IS_ADMIN = os.getenv("IS_ADMIN_DEV")
+
+    # MIDTRANS INTEGRATION
+    SERVER_KEY = os.getenv('MIDTRANS_SERVER_KEY')
+    CLIENT_KEY = os.getenv('MIDTRANS_CLIENT_KEY')

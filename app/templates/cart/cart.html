@@ -9,7 +9,13 @@
         
         <div class="card mb-2">
           <div class="card-header">
-            <h5 class="card-title">Your Order</h5>
+            <div class="d-flex justify-content-between">
+              <h5 class="card-title">Your Order</h5>
+              {% if carts|length %}
+                <button onclick="product_checkout()" class="btn btn-success" id="checkout">Check Out!</button>
+                {# <a href="{{ url_for('main.checkout') }}" class="btn btn-success" id="checkout">Check Out!</a> #}
+              {% endif %}
+            </div>
           </div>
           
           <div class="card-body table-responsive">
@@ -22,19 +28,21 @@
                 <th>Cost</th>
                 <th>&nbsp;</th>
               </thead>
+              {% if carts|length %}
+              
               <tbody>
               {% for cart in carts %}
                 <tr class="product">
                   <td>{{ loop.index }}</td>
-                  <td>
+                  <td class="product-name">
                     <img src="{{ url_for('static', filename="uploads/" + cart.image) }}" alt="" width="60" height="60">
-                    {{cart.product_name}}
+                    <span class="name">{{cart.product_name}}</span>
                   </td>
                   <td class="product-price">
                     Rp.<span class="price" id="price">{{cart.regural_price}}</span>
                   </td>
                   <td class="product-quantity">
-                    <input type="number" min="1" max="{{ cart.quantity }}" value="1">
+                    <input type="number" min="1" max="{{ cart.quantity }}" value="1" class="quantity">
                   </td>
                   <td class="product-cost">Rp.<span class="cost">{{cart.regural_price}}</span></td>
                   <td>
@@ -54,6 +62,7 @@
                   </td>
                 </tr>
               </tfoot>
+              {% endif %}
             </table>
           </div>
         </div>
