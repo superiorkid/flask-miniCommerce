@@ -54,6 +54,13 @@
         </tr>
       </tfoot>
     </table>
+    
+    <div>
+      <h3>Result</h3>
+      <pre>
+        <code id="results"></code>
+      </pre>
+    </div>
   </div>
 </div> 
 
@@ -69,12 +76,10 @@
     checkoutBtn.onclick = function() {
       snap.pay(token, {
         onSuccess: function(result) {
-            console.log("SUCCESS", result);
-            alert("Payment accepted \r\n"+JSON.stringify(result));
+          document.getElementById('results').innerHTML += JSON.stringify(result)
           },
         onPending: function(result) {
-            console.log("Payment pending", result);
-            alert("Payment pending \r\n"+JSON.stringify(result));
+            document.getElementById('results').innerHTML += JSON.stringify(result)
           },
         onError: function() {
             console.log("Payment error");
