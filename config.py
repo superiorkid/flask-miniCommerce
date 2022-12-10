@@ -56,3 +56,6 @@ class DevelopmentConfig(Config):
     # MIDTRANS INTEGRATION
     SERVER_KEY = os.getenv('MIDTRANS_SERVER_KEY')
     CLIENT_KEY = os.getenv('MIDTRANS_CLIENT_KEY')
+
+    # RAJAONGKIR
+    KEY = os.getenv('RAJAONGKIR_KEY')

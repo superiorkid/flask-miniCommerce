@@ -1,6 +1,8 @@
 from flask_login import login_required
-from flask import render_template, flash, redirect, url_for
+from flask import render_template, flash, redirect, url_for, current_app, abort, jsonify
 from flask_login import current_user
+
+import requests
 
 from . import users
 from .. import db
@@ -53,7 +55,7 @@ def edit_profile():
     form.country.data = user.country
     form.zipcode.data = user.zipcode
     form.phone.data = user.phone
-    return render_template('users/edit_profile.html', form=form, user=user)
+    return render_template('users/edit_profile.html', form=form, user=user, key=current_app.config['KEY'])
 
 
 @ users.get('/<int:id>/edit')
@@ -99,3 +101,30 @@ def user_delete(id):
     db.session.delete(user)
     db.session.commit()
     flash("User delete successfully.")
+
+
+@users.get('/get_provinces')
+def get_user_province():
+    try:
+        r = requests.get('https://api.rajaongkir.com/starter/province', headers={
+            "key": current_app.config['KEY']
+        })
+    except requests.exceptions.RequestException as e:
+        abort(500)
+
+    provinces = r.json()['rajaongkir']['results']
+    return jsonify(provinces)
+
+
+@users.get('/get_cities/<province_id>')
+def get_cities(province_id):
+    try:
+        r = requests.get(
+            f'https://api.rajaongkir.com/starter/city?province={province_id}', headers={
+                "key": current_app.config['KEY']
+            })
+    except requests.exceptions.RequestException as e:
+        abort(500)
+
+    cities = r.json()['rajaongkir']['results']
+    return jsonify(cities)
