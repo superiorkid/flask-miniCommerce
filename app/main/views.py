@@ -7,18 +7,27 @@ import os
 import requests
 
 from . import main
-from ..models import Product, User
+from ..models import Product, User, Category
 
 
 @main.get('/')
 @login_required
 def index():
     products = Product.query.all()
-    return render_template('index.html', products=products)
+    categories = Category.query.all()
+
+    category = request.args.get('category')
+    if category:
+        cat = Category.query.filter_by(name=category).first()
+        filter_by_category = Product.query.filter(
+            Product.category.contains(cat)).all()
+        return render_template('index.html', filter_by_category=filter_by_category, categories=categories, category=category)
+
+    return render_template('index.html', products=products, categories=categories)
 
 
-@main.post('/checkout')
-@login_required
+@ main.post('/checkout')
+@ login_required
 def checkout():
     data = request.get_json()
     session['cart'] = data
@@ -26,8 +35,8 @@ def checkout():
     return redirect(url_for('main.payment'))
 
 
-@main.get('/checkout')
-@login_required
+@ main.get('/checkout')
+@ login_required
 def payment():
     if "cart" not in session:
         return redirect(url_for('cart.cart_list'))
