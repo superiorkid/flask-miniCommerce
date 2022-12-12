@@ -20,6 +20,7 @@ class ProductForm(FlaskForm):
     quantity = StringField("Quantity", validators=[
                            DataRequired()], widget=NumberInput(min=0))
     regular_price = BetterDecimalField('Price', validators=[DataRequired()])
+    category = StringField('Category', validators=[DataRequired()])
     submit = SubmitField("Add Product")
 
     def validate_sku(self, field):

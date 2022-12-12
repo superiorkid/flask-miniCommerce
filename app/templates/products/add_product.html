@@ -63,6 +63,11 @@
           {{form.regular_price(class="form-control")}}
         </div>
       </div>
+      <div class="form-group">
+        {{form.category.label}}
+        {{form.category(class="form-control", rows="10")}}
+        <small id="emailHelp" class="form-text text-muted ml-2"><b>**</b> Gunakan tanda koma <code>`,`</code>untuk memisah antar kategori.</small>
+      </div>
       <div class="mt-3">
         <button onclick="history.back()" class="btn btn-secondary">Back</button>
         {{form.submit(class="btn btn-success")}}

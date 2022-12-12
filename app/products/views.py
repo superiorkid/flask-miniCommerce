@@ -8,7 +8,7 @@ import os
 from .. import db
 from ..decorators import permission_required
 from . import products
-from ..models import Permission, Product, User
+from ..models import Permission, Product, User, Category
 from .forms import ProductForm, EditProductForm
 
 
@@ -39,10 +39,26 @@ def insert_product():
         f.save(os.path.join(
             current_app.config['UPLOAD_FOLDER'], new_filename))
 
+        categories = form.category.data.split(',')
+        products_category = []
+        for category in categories:
+            categorys = category.strip()
+            products_category.append(categorys)
+            if not Category.query.filter_by(name=categorys).first():
+                new_category = Category(name=categorys)
+                db.session.add(new_category)
+
+            continue
+
         new_product = Product(sku=form.sku.data, product_name=form.product_name.data, description=form.description.data,
                               image=new_filename, quantity=form.quantity.data, regural_price=form.regular_price.data)
 
-        db.session.add(new_product)
+        for pc in products_category:
+            ct = Category.query.filter_by(name=pc).first()
+            new_product.category.append(ct)
+
+            db.session.add(new_product)
+
         db.session.commit()
         flash("New Product has been added")
 

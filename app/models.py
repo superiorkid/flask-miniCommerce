@@ -13,6 +13,9 @@ cart_item = db.Table(
     db.Column('user_id', db.Integer, db.ForeignKey('user.id'))
 )
 
+product_category = db.Table("product_category", db.Column('category_id', db.Integer, db.ForeignKey(
+    'category.id'), primary_key=True), db.Column('product_id', db.Integer, db.ForeignKey('product.id'), primary_key=True))
+
 
 class User(UserMixin, db.Model):
     # user auth
@@ -144,9 +147,19 @@ class Product(db.Model):
     sku = db.Column(db.String(50), nullable=False)
     product_name = db.Column(db.String(100), nullable=False)
     description = db.Column(db.Text, nullable=False)
-    image = db.Column(db.String(100), nullable=False)
+    image = db.Column(db.String(110), nullable=False)
     quantity = db.Column(db.Integer, nullable=False)
     regural_price = db.Column(db.DECIMAL)
+    category = db.relationship('Category', secondary=product_category,
+                               lazy="subquery", backref=db.backref('products', lazy=True))
 
     def __repr__(self):
         return f"<{self.id} | {self.product_name}>"
+
+
+class Category(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100), nullable=False)
+
+    def __repr__(self) -> str:
+        return f'<Category {self.name}>'

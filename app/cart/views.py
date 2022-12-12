@@ -2,7 +2,7 @@ from flask import flash, jsonify, render_template, redirect, request
 from flask_login import current_user, login_required
 
 from . import cart
-from ..models import User, Product
+from ..models import User, Product, Category
 from .. import db
 
 
