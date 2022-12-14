@@ -38,6 +38,7 @@ class User(UserMixin, db.Model):
     role_id = db.Column(db.Integer, db.ForeignKey('role.id'))
     products = db.relationship(
         "Product", secondary=cart_item, backref="user")
+    orders = db.relationship('Orders', backref="user", lazy=True)
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -152,6 +153,7 @@ class Product(db.Model):
     regural_price = db.Column(db.DECIMAL)
     category = db.relationship('Category', secondary=product_category,
                                lazy="subquery", backref=db.backref('products', lazy=True))
+    orders = db.Column(db.Integer, db.ForeignKey('order_item.id'))
 
     def __repr__(self):
         return f"<{self.id} | {self.product_name}>"
@@ -163,3 +165,39 @@ class Category(db.Model):
 
     def __repr__(self) -> str:
         return f'<Category {self.name}>'
+
+
+class OrderItem(db.Model):
+    """
+        id,
+        item_id,
+        quantity,
+        prices,
+    """
+    id = db.Column(db.Integer, primary_key=True)
+    items = db.relationship(
+        "Product", backref="order_item", lazy=True, uselist=False)
+    quantity = db.Column(db.Integer, nullable=False)
+    price = db.Column(db.DECIMAL, nullable=False)
+    orders = db.relationship('Orders', backref="order_item", lazy=True)
+
+    def __repr__(self):
+        return f"<Order Item ke {self.id}>"
+
+
+class Orders(db.Model):
+    """
+        {
+            id,
+            customer_id,
+            orderItem_id,
+            total,
+            status
+        }
+    """
+    id = db.Column(db.Integer, primary_key=True)
+    customer_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    order_item_id = db.Column(db.Integer, db.ForeignKey(
+        'order_item.id'), nullable=False)
+    total = db.Column(db.DECIMAL, nullable=False)
+    status = db.Column(db.String(100), nullable=False)
