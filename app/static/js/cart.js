@@ -28,7 +28,7 @@ const product_checkout = () => {
   let cost = document.getElementsByClassName("cost");
   let total = document.getElementById("total");
 
-  let carts = [];
+  temp = [];
 
   for (let i = 0; i < product.length; i++) {
     let cart = {
@@ -36,10 +36,11 @@ const product_checkout = () => {
       price: price[i].innerHTML,
       quantity: quantity[i].value,
       cost: cost[i].innerHTML,
-      total: total.innerHTML,
     };
-    carts.push(cart);
+    temp.push(cart);
   }
+
+  let carts = { total: total.innerHTML, detail: temp };
 
   fetch(`http://127.0.0.1:5000/checkout`, {
     method: "POST",
