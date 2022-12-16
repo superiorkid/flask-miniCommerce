@@ -1,0 +1,46 @@
+{% from 'bootstrap4/utils.html' import render_icon %}
+
+{% extends "base.html" %}
+
+{% block content %}
+
+  <div class="container mt-5 w-50 pb-5">
+    <h1 class="font-weight-bold">Transaction History</h1>
+    <hr>
+
+      <div class="card">
+        <div class="card-body">
+          <div class="table-responsive">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>No</th>
+                  <th>Penerima</th>
+                  <th>Alamat</th>
+                  <th>Status</th>
+                  <th>&nbsp;</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for order in orders %}  
+                <tr>
+                  <td>{{ loop.index }}</td>
+                  <td>{{ order.penerima }}</td>
+                  <td>{{ order.alamat }}</td>
+                  <td>
+                    <span class="badge badge-danger">{{order.status}}</span>
+                  </td>
+                  <td>
+                    <a href="#detail" class="btn btn-sm btn-warning">{{ render_icon('file-earmark-text-fill') }}</a>
+                  </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+  </div>  
+
+{% endblock content %}

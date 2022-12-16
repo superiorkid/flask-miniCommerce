@@ -8,7 +8,7 @@ from . import users
 from .. import db
 from ..decorators import admin_required
 from .forms import EditProfileForm, EditProfileAdminForm
-from ..models import User, Role
+from ..models import User, Role, Orders, OrderItem
 
 
 @users.get('/')
@@ -128,3 +128,10 @@ def get_cities(province_id):
 
     cities = r.json()['rajaongkir']['results']
     return jsonify(cities)
+
+
+@users.get('/transaction-history')
+@login_required
+def history():
+    orders = Orders.query.filter_by(customer_id=current_user.id).all()
+    return render_template('users/history.html', orders=orders)
