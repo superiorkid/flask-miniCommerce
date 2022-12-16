@@ -1,6 +1,6 @@
 from flask_login import login_required, current_user
 from flask import render_template, jsonify, current_app, request, flash, redirect, url_for, session
-from datetime import datetime
+from datetime import datetime, timedelta
 
 
 import os
@@ -73,3 +73,13 @@ def payment():
         return redirect(url_for('users.history'))
 
     return render_template('cart/checkout.html', carts=carts, form=form)
+
+
+@main.before_app_request
+def before_request():
+    orders = Orders.query.all()
+
+    for order in orders:
+        if order.status != 'success' and order.status != "cancel":
+            if order.created_at - timedelta(days=1) <= order.created_at:
+                order.status = "expired"

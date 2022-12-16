@@ -192,7 +192,7 @@ class Orders(db.Model):
     alamat = db.Column(db.String(200), nullable=False)
     total = db.Column(db.DECIMAL, nullable=False)
     pesan = db.Column(db.Text, nullable=True)
-    status = db.Column(db.String(100), nullable=False, default="Pending")
+    status = db.Column(db.String(100), nullable=False, default="pending")
 
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow)
