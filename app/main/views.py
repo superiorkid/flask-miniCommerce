@@ -58,13 +58,18 @@ def payment():
             product = Product.query.filter_by(
                 product_name=cart['name']).first()
             new_order_item = OrderItem(
-                quantity=cart['quantity'], price=cart['cost'], items=product)
+                quantity=cart['quantity'], price=cart['cost'], product_id=product.id)
             db.session.add(new_order_item)
             new_order.items.append(new_order_item)
 
+        # delete user cart
+        user = User.query.get(current_user.id)
+        user.products.clear()
+
+        db.session.add(user)
         db.session.add(new_order)
         db.session.commit()
-        flash('Success', 'success')
-        return redirect(url_for('main.index'))
+        flash('Order has been made. Please pay!!', 'success')
+        return redirect(url_for('users.history'))
 
     return render_template('cart/checkout.html', carts=carts, form=form)

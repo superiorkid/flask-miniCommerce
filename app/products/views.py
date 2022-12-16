@@ -2,6 +2,7 @@
 from flask import request, render_template, current_app, flash, redirect, url_for, jsonify
 from flask_login import login_required, current_user
 from werkzeug.utils import secure_filename
+from datetime import datetime
 
 import os
 
@@ -95,6 +96,7 @@ def edit_product(id):
         products.description = form.description.data
         products.quantity = form.quantity.data
         products.regural_price = form.regular_price.data
+        products.updated_at = datetime.utcnow()
 
         db.session.commit()
         flash("Product update successfully")

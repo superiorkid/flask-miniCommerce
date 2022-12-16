@@ -26,53 +26,53 @@
                 </svg>
               Cart is empty!
             </div>
-          {% endif %}
-                    
-          <table class="table table-striped">
-            <thead>
-              <th>#</th>
-              <th>Product</th>
-              <th>Price</th>
-              <th>Quantity</th>
-              <th>Cost</th>
-              <th>&nbsp;</th>
-            </thead>
-            {% if carts|length %}
-            
-            <tbody>
-            {% for cart in carts %}
-              <tr class="product">
-                <td>{{ loop.index }}</td>
-                <td class="product-name">
-                  <img src="{{ url_for('static', filename="uploads/" + cart.image) }}" alt="" width="60" height="60">
-                  <span class="name">{{cart.product_name}}</span>
-                </td>
-                <td class="product-price">
-                  Rp.<span class="price" id="price">{{cart.regural_price}}</span>
-                </td>
-                <td class="product-quantity">
-                  <input type="number" min="1" max="{{ cart.quantity }}" value="1" class="quantity">
-                </td>
-                <td class="product-cost">Rp.<span class="cost">{{cart.regural_price}}</span></td>
-                <td>
-                  <button onclick="removeFromCart({{cart.id}})" class="btn btn-sm btn-danger">{{ render_icon('trash-fill') }}</button>
-                </td>
-              </tr>
-            {% endfor %}
-            </tbody>
-            <tfoot>
-              <tr>
-                <td>&nbsp;</td>
-                <td>&nbsp;</td>
-                <td>&nbsp;</td>
-                <th>TOTAL</th>
-                <td>
-                  Rp.<span id="total"></span>
-                </td>
-              </tr>
-            </tfoot>
-            {% endif %}
-          </table>
+          {% else %}
+            <table class="table table-striped">
+              <thead>
+                <th>#</th>
+                <th>Product</th>
+                <th>Price</th>
+                <th>Quantity</th>
+                <th>Cost</th>
+                <th>&nbsp;</th>
+              </thead>
+              {% if carts|length %}
+              
+              <tbody>
+              {% for cart in carts %}
+                <tr class="product">
+                  <td>{{ loop.index }}</td>
+                  <td class="product-name">
+                    <img src="{{ url_for('static', filename="uploads/" + cart.image) }}" alt="" width="60" height="60">
+                    <span class="name">{{cart.product_name}}</span>
+                  </td>
+                  <td class="product-price">
+                    Rp.<span class="price" id="price">{{cart.regural_price}}</span>
+                  </td>
+                  <td class="product-quantity">
+                    <input type="number" min="1" max="{{ cart.quantity }}" value="1" class="quantity">
+                  </td>
+                  <td class="product-cost">Rp.<span class="cost">{{cart.regural_price}}</span></td>
+                  <td>
+                    <button onclick="removeFromCart({{cart.id}})" class="btn btn-sm btn-danger">{{ render_icon('trash-fill') }}</button>
+                  </td>
+                </tr>
+              {% endfor %}
+              </tbody>
+              <tfoot>
+                <tr>
+                  <td>&nbsp;</td>
+                  <td>&nbsp;</td>
+                  <td>&nbsp;</td>
+                  <th>TOTAL</th>
+                  <td>
+                    Rp.<span id="total"></span>
+                  </td>
+                </tr>
+              </tfoot>
+              {% endif %}
+            </table>
+          {% endif %}       
         </div>
       </div>
 

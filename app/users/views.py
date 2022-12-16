@@ -1,6 +1,7 @@
 from flask_login import login_required
 from flask import render_template, flash, redirect, url_for, current_app, abort, jsonify
 from flask_login import current_user
+from datetime import datetime
 
 import requests
 
@@ -42,6 +43,7 @@ def edit_profile():
         user.country = form.country.data
         user.zipcode = form.zipcode.data
         user.phone = form.phone.data
+        user.updated_at = datetime.utcnow()
 
         db.session.commit()
         flash("User update successfully!!")
@@ -76,6 +78,7 @@ def edit_profile_admin(id):
         user.zipcode = form.zipcode.data
         user.phone = form.phone.data
         user.role = Role.query.get(form.role.data)
+        user.updated_at = datetime.utcnow()
 
         db.session.commit()
         flash("User update successfully!!")
