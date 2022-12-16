@@ -36,9 +36,10 @@ class User(UserMixin, db.Model):
     phone = db.Column(db.String(20), nullable=True)
 
     role_id = db.Column(db.Integer, db.ForeignKey('role.id'))
+    # orders_id = db.Column(db.Integer, db.ForeignKey('orders.id'))
+    ordered = db.relationship('Orders', backref="customer", lazy=True)
     products = db.relationship(
         "Product", secondary=cart_item, backref="user")
-    orders = db.relationship('Orders', backref="user", lazy=True)
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -168,36 +169,27 @@ class Category(db.Model):
 
 
 class OrderItem(db.Model):
-    """
-        id,
-        item_id,
-        quantity,
-        prices,
-    """
     id = db.Column(db.Integer, primary_key=True)
     items = db.relationship(
         "Product", backref="order_item", lazy=True, uselist=False)
     quantity = db.Column(db.Integer, nullable=False)
     price = db.Column(db.DECIMAL, nullable=False)
-    orders = db.relationship('Orders', backref="order_item", lazy=True)
+    orders_id = db.Column(db.Integer, db.ForeignKey('orders.id'))
 
     def __repr__(self):
         return f"<Order Item ke {self.id}>"
 
 
 class Orders(db.Model):
-    """
-        {
-            id,
-            customer_id,
-            orderItem_id,
-            total,
-            status
-        }
-    """
     id = db.Column(db.Integer, primary_key=True)
+    # customer = db.relationship("User", backref="orders", lazy=True)
     customer_id = db.Column(db.Integer, db.ForeignKey('user.id'))
-    order_item_id = db.Column(db.Integer, db.ForeignKey(
-        'order_item.id'), nullable=False)
+    items = db.relationship('OrderItem', backref="orders", lazy=True)
+    penerima = db.Column(db.String(100), nullable=False)
+    alamat = db.Column(db.String(200), nullable=False)
     total = db.Column(db.DECIMAL, nullable=False)
-    status = db.Column(db.String(100), nullable=False)
+    pesan = db.Column(db.Text, nullable=True)
+    status = db.Column(db.String(100), nullable=False, default="Pending")
+
+    def __repr__(self) -> str:
+        return f"id {self.id}"

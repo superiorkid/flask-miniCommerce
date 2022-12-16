@@ -1,5 +1,5 @@
 const addToCart = (productId) => {
-  fetch(`http://127.0.0.1:5000/cart/${productId}/add`, {
+  fetch(`${window.location.origin}/cart/${productId}/add`, {
     method: "POST",
   }).then((res) => {
     if (!res.ok) {
@@ -13,7 +13,7 @@ const addToCart = (productId) => {
 };
 
 const removeFromCart = (productId) => {
-  fetch(`http://127.0.0.1:5000/cart/${productId}/remove`, {
+  fetch(`${window.location.origin}/cart/${productId}/remove`, {
     method: "DELETE",
   });
   alert("Product remove from cart.");
@@ -42,13 +42,13 @@ const product_checkout = () => {
 
   let carts = { total: total.innerHTML, detail: temp };
 
-  fetch(`http://127.0.0.1:5000/checkout`, {
+  fetch(`${window.location.origin}/checkout`, {
     method: "POST",
     credentials: "include",
     body: JSON.stringify(carts),
-    headers: new Headers({
+    headers: {
       "content-type": "application/json",
-    }),
+    },
   }).then((response) => {
     if (response.redirected) {
       window.location = response.url;

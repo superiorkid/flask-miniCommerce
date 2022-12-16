@@ -1,90 +1,77 @@
+{% from 'bootstrap4/utils.html' import render_icon %}
+
 {% extends "base.html" %}
 
-{% block styles %}
-  <style>
-    .table th {
-      text-align: center;
-    }
-    
-    .table {
-      justify-content: center;
-      width: 50% !important;
-    }
-  </style>
-{% endblock styles %}
-
 {% block content %}
-<div class="container mt-5 pb-5">
-  <h1 class="font-weight-bold ml-2">Check Out</h1>
-  <hr>
-  
-  <div class="table-responsive cart">
-    <input type="hidden" id="snap_token" value="{{ token }}">
-    <table class="table table-bordered w-50 table-striped mx-auto">
-      <thead>
-        <tr>
-          <th>Invoice</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for cart in carts %}
-          <tr>
-            <td>
-              <div class="d-flex justify-content-between">
-                  <span class="ml-2">{{cart.name}}</span>
-                  <span class="mr-3">Rp.{{cart.price | currency_format}} <b>x</b> {{cart.quantity}}</span>
+  <div class="container mt-5 pb-5">
+    <h1 class="font-weight-bold ml-2">Product Order</h1>
+    <hr>
+        
+      <div class="card mb-2">
+        <div class="card-header">
+          <h5 class="card-title">Your Cart</h5>
+        </div>
+        
+        <div class="card-body">
+          <div class="row">
+            <div class="col-4">
+              <form method="POST">
+                {{form.hidden_tag()}}
+                <div class="form-group">
+                  {{form.penerima.label}}
+                  {{form.penerima(class="form-control")}}
                 </div>
-            </td>
-          </tr>
-        {% endfor %}
-      </tbody>
-      <tfoot>
-        <tr>
-          <td>
-            <div class="d-flex justify-content-between">
-              <span class="ml-2 font-weight-bold">Total</span>
-              <span class="mr-3">Rp.{{ carts[0].total | currency_format}}</span>
+                <div class="form-group">
+                  {{form.alamat.label}}
+                  {{form.alamat(class="form-control")}}
+                </div>
+                <div class="form-group">
+                  {{form.pesan.label}}
+                  {{form.pesan(class="form-control")}}
+                </div>
+                {{form.submit(class="btn btn-sm btn-info btn-block")}}
+              </form>
             </div>
-          </td>
-        </tr>
-        <tr>
-          <td>
-            <button id='checkout-button' class="btn btn-primary btn-block">Pay</button>
-          </td>
-        </tr>
-      </tfoot>
-    </table>
-    
-    <div>
-      <h3>Result</h3>
-      <pre>
-        <code id="results"></code>
-      </pre>
-    </div>
-  </div>
-</div> 
+            <div class="col-8 table-responsive">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>#</th>
+                    <th>Name</th>
+                    <th>Quantity</th>
+                    <th>Cost</th>
+                  </tr>
+                </thead>
+                <tbody>
+                {% for order in carts['detail'] %}
+                  <tr>
+                    <td>{{ loop.index }}</td>
+                    <td>{{ order.name }}</td>
+                    <td>{{order.quantity}}</td>
+                    <td>Rp. <span>{{ order.cost | currency_format }}</span></td>
+                  </tr>
+                {% endfor %}
+                </tbody>
+                <tfoot>
+                  <tr>
+                    <th>&nbsp;</th>
+                    <th>&nbsp;</th>
+                    <th>Total</th>
+                    <th>Rp.<span>{{ carts.total|currency_format }}</span></th>
+                  </tr>
+                </tfoot>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
 
+    </div>   
+  </div>
 {% endblock content %}
 
+
 {% block scripts %}
-  <script type="text/javascript" src="https://app.sandbox.midtrans.com/snap/snap.js" data-client-key="{{ client_key }}"></script>
-
-  <script>
-    var token = document.querySelectorAll('#snap_token')[0].value
-
-    var checkoutBtn = document.getElementById('checkout-button')
-    checkoutBtn.onclick = function() {
-      snap.pay(token, {
-        onSuccess: function(result) {
-          document.getElementById('results').innerHTML += JSON.stringify(result)
-          },
-        onPending: function(result) {
-            document.getElementById('results').innerHTML += JSON.stringify(result)
-          },
-        onError: function() {
-            console.log("Payment error");
-          }
-      })
-    }
-  </script>
+  <script src="{{ url_for('static', filename="js/cart.js") }}"></script>
+  <script src="{{ url_for('static', filename="js/subtotal.js") }}"></script>
 {% endblock scripts %}

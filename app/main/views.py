@@ -1,13 +1,16 @@
 from flask_login import login_required, current_user
-from flask import render_template, current_app, request, redirect, url_for, session
-from midtransclient import Snap
+from flask import render_template, jsonify, current_app, request, flash, redirect, url_for, session
 from datetime import datetime
+
 
 import os
 import requests
+import json
 
+from .forms import OrdersForm
 from . import main
-from ..models import Product, User, Category
+from ..models import Product, User, Category, OrderItem, Orders
+from .. import db
 
 
 @main.get('/')
@@ -29,63 +32,39 @@ def index():
 @ main.post('/checkout')
 @ login_required
 def checkout():
-    data = request.get_json()
-    session['cart'] = data
+    cart = request.get_json(force=True)
+    session['cart'] = cart
 
     return redirect(url_for('main.payment'))
 
 
-@ main.get('/checkout')
-@ login_required
+@ main.get('/pay')
+@ main.post('/pay')
 def payment():
+    # check if cart in session
     if "cart" not in session:
         return redirect(url_for('cart.cart_list'))
 
+    # get data from session
     carts = session['cart']
-    new_carts = [{
-        "id": f'product-{cart.get("name")}-{current_user.id}',
-        "price": cart.get('price'),
-        "quantity": cart.get('quantity'),
-        "name": cart.get('name')
-    } for cart in carts]
+    form = OrdersForm()
 
-    snap = Snap(
-        is_production=False,
-        server_key=current_app.config['SERVER_KEY'],
-        client_key=current_app.config['CLIENT_KEY']
-    )
+    if form.validate_on_submit():
+        penerima, alamat, pesan = form.penerima.data, form.alamat.data, form.pesan.data
+        new_order = Orders(customer_id=current_user.id, penerima=penerima,
+                           alamat=alamat, pesan=pesan, total=carts['total'])
 
-    timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    transaction_token = snap.create_transaction_token({
-        "transaction_details": {
-            "order_id": f"minicommerce-{current_user.id}-{timestamp}",
-            "gross_amount": carts[0]["total"]
-        }, "credit_card": {
-            "secure": True
-        }, "item_details": new_carts,
-        "customer_details": {
-            "first_name": current_user.fname,
-            "last_name": current_user.lname,
-            "email": current_user.email,
-            "phone": f"+{current_user.phone}",
-            "billing_address": {
-                "first_name": current_user.fname,
-                "last_name": current_user.lname,
-                "email": current_user.email,
-                "phone": f"+{current_user.phone}",
-                "address": current_user.address,
-                "city": current_user.city,
-                "postal_code": current_user.zipcode
-            },
-            "shipping_address": {
-                "first_name": current_user.fname,
-                "last_name": current_user.lname,
-                "email": current_user.email,
-                "phone": f"+{current_user.phone}",
-                "address": current_user.address,
-                "city": current_user.city,
-                "postal_code": current_user.zipcode
-            }
-        }
-    })
-    return render_template('cart/checkout.html', carts=carts, token=transaction_token, client_key=snap.api_config.client_key)
+        for cart in carts['detail']:
+            product = Product.query.filter_by(
+                product_name=cart['name']).first()
+            new_order_item = OrderItem(
+                quantity=cart['quantity'], price=cart['cost'], items=product)
+            db.session.add(new_order_item)
+            new_order.items.append(new_order_item)
+
+        db.session.add(new_order)
+        db.session.commit()
+        flash('Success', 'success')
+        return redirect(url_for('main.index'))
+
+    return render_template('cart/checkout.html', carts=carts, form=form)

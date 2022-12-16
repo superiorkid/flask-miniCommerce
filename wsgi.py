@@ -1,5 +1,5 @@
 from app import create_app, db
-from app.models import User, Product
+from app.models import User, Product, OrderItem, Orders
 
 app = create_app()
 
