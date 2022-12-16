@@ -37,7 +37,7 @@
                   <td>{{ order.penerima }}</td>
                   <td>{{ order.alamat }}</td>
                   <td>
-                    <span class="badge badge-danger">{{order.status}}</span>
+                    <span class="badge badge-{% if order.status == 'pending' %}warning{% elif order.status == 'expired' %}info{%elif order.status == 'success' %}success{% else %}danger{% endif %}">{{order.status}}</span>
                   </td>
                   <td>
                     <a href="{{ url_for('main.invoice', id=order.id) }}" class="btn btn-sm btn-warning">{{ render_icon('file-earmark-text-fill') }}</a>
