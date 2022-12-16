@@ -80,6 +80,14 @@ def before_request():
     orders = Orders.query.all()
 
     for order in orders:
-        if order.status != 'success' and order.status != "cancel":
-            if order.created_at - timedelta(days=1) <= order.created_at:
+        if (order.status != 'success') and (order.status != "cancel"):
+            if (order.created_at - timedelta(days=1)) >= order.created_at:
                 order.status = "expired"
+                db.session.commit()
+
+
+@main.get('/invoice/<int:id>')
+@login_required
+def invoice(id):
+    order = Orders.query.get(id)
+    return render_template('invoice.html', order=order)

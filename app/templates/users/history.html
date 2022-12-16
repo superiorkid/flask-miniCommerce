@@ -40,7 +40,7 @@
                     <span class="badge badge-danger">{{order.status}}</span>
                   </td>
                   <td>
-                    <a href="#detail" class="btn btn-sm btn-warning">{{ render_icon('file-earmark-text-fill') }}</a>
+                    <a href="{{ url_for('main.invoice', id=order.id) }}" class="btn btn-sm btn-warning">{{ render_icon('file-earmark-text-fill') }}</a>
                   </td>
                 </tr>
                 {% endfor %}
