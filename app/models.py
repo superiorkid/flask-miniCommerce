@@ -4,7 +4,6 @@ from flask import current_app
 from itsdangerous.serializer import Serializer
 from hashlib import md5
 from datetime import datetime
-
 from . import login_manager, db
 
 cart_item = db.Table(
@@ -34,9 +33,10 @@ class User(UserMixin, db.Model):
     country = db.Column(db.String(30), nullable=True)
     zipcode = db.Column(db.String(10), nullable=True)
     phone = db.Column(db.String(20), nullable=True)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    updated_at = db.Column(db.DateTime, default=datetime.utcnow)
 
     role_id = db.Column(db.Integer, db.ForeignKey('role.id'))
-    # orders_id = db.Column(db.Integer, db.ForeignKey('orders.id'))
     ordered = db.relationship('Orders', backref="customer", lazy=True)
     products = db.relationship(
         "Product", secondary=cart_item, backref="user")
@@ -154,7 +154,11 @@ class Product(db.Model):
     regural_price = db.Column(db.DECIMAL)
     category = db.relationship('Category', secondary=product_category,
                                lazy="subquery", backref=db.backref('products', lazy=True))
-    orders = db.Column(db.Integer, db.ForeignKey('order_item.id'))
+    item_ordered = db.relationship(
+        'OrderItem', backref="product", lazy=True, uselist=False)
+
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    updated_at = db.Column(db.DateTime, default=datetime.utcnow)
 
     def __repr__(self):
         return f"<{self.id} | {self.product_name}>"
@@ -170,11 +174,11 @@ class Category(db.Model):
 
 class OrderItem(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    items = db.relationship(
-        "Product", backref="order_item", lazy=True, uselist=False)
+    product_id = db.Column(db.Integer, db.ForeignKey('product.id'))
     quantity = db.Column(db.Integer, nullable=False)
     price = db.Column(db.DECIMAL, nullable=False)
     orders_id = db.Column(db.Integer, db.ForeignKey('orders.id'))
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
     def __repr__(self):
         return f"<Order Item ke {self.id}>"
@@ -182,7 +186,6 @@ class OrderItem(db.Model):
 
 class Orders(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    # customer = db.relationship("User", backref="orders", lazy=True)
     customer_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     items = db.relationship('OrderItem', backref="orders", lazy=True)
     penerima = db.Column(db.String(100), nullable=False)
@@ -190,6 +193,9 @@ class Orders(db.Model):
     total = db.Column(db.DECIMAL, nullable=False)
     pesan = db.Column(db.Text, nullable=True)
     status = db.Column(db.String(100), nullable=False, default="Pending")
+
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    updated_at = db.Column(db.DateTime, default=datetime.utcnow)
 
     def __repr__(self) -> str:
         return f"id {self.id}"
