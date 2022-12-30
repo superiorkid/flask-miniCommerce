@@ -25,6 +25,11 @@
 							<li class="nav-item pl-1">
 								<a class="nav-link" href="{{ url_for('products.show_product') }}"><i class="fa fa-th-list fa-fw mr-1"></i>Product</a>
 							</li>
+
+                            {#  all user orders here... #}
+                            <li class="nav-item pl-1">
+								<a class="nav-link" href="{{ url_for("main.orders") }}"><i class="fa fa-th-list fa-fw mr-1"></i>Orders</a>
+							</li>
 						{% endif %}
 					<li class="nav-item pl-1 ">
 						<a class="nav-link" href="{{ url_for('cart.cart_list') }}"><i class="fa fa-th-list fa-fw mr-1"></i>Cart <span class="badge badge-light">{{ cart_item }}</span></a>

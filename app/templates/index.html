@@ -7,7 +7,7 @@
 {% endblock styles %}
 
 {% block content %}
-
+    
 <div class="jumbotron">
   <div class="container w-50">
     <h1 class="display-4">Flask-miniCommerce</h1>
@@ -65,31 +65,40 @@
           </div>
     {% endfor %}
   {% else %}
-    {% for product in products %}
-          <div class="col-6 col-sm-6 col-md-4 col-lg-3 col-lg-five mb-4">
-              <figure class="card card-product-grid h-100">
-                  <div class="img-wrap rounded bg-gray-light">
+		
+		
+		{% if products %}
+			{% for product in products %}
+				<div class="col-6 col-sm-6 col-md-4 col-lg-3 col-lg-five mb-4">
+						<figure class="card card-product-grid h-100">
+								<div class="img-wrap rounded bg-gray-light">
 
-                      {# check if product in cart #}
-                      {% if product in current_user.products %}
-                      <span class="topbar">
-                          <span class="badge tag-discount">{{ render_icon("cart4") }}</span>
-                      </span>
-                      {% endif %}
-                      {# / check if product in cart #}
+										{# check if product in cart #}
+										{% if product in current_user.products %}
+										<span class="topbar">
+												<span class="badge tag-discount">{{ render_icon("cart4") }}</span>
+										</span>
+										{% endif %}
+										{# / check if product in cart #}
 
-                      <img class="mix-blend-mode" src="{{ url_for('static', filename="uploads/" + product.image) }}" alt="Funko Pop! Spiderman Integrated Suit - Marvel: Spiderman No Way Home">
-                  </div>
-                  <figcaption class="card-product-info">
-                      <a href="" class="title">{{ product.product_name }}</a>
-                      <div class="price-wrap">
-                          <span class="price">Rp.{{ product.regural_price | currency_format }}</span>
-                      </div>
-                      <a href="{{ url_for('products.detail_product', id=product.id) }}" class="btn btn-sm btn-outline-danger w-100 mt-2">Show Detail</a>
-                  </figcaption>
-              </figure>
-          </div>
-    {% endfor %}
+										<img class="mix-blend-mode" src="{{ url_for('static', filename="uploads/" + product.image) }}" alt="Funko Pop! Spiderman Integrated Suit - Marvel: Spiderman No Way Home">
+								</div>
+								<figcaption class="card-product-info">
+										<a href="" class="title">{{ product.product_name }}</a>
+										<div class="price-wrap">
+												<span class="price">Rp.{{ product.regural_price | currency_format }}</span>
+										</div>
+										<a href="{{ url_for('products.detail_product', id=product.id) }}" class="btn btn-sm btn-outline-danger w-100 mt-2">Show Detail</a>
+								</figcaption>
+						</figure>
+				</div>
+			{% endfor %}
+		{% else %}
+			<div class="alert alert-danger" role="alert">
+				Product is empty!!
+			</div>
+		{% endif %}
+			
   {% endif %}
     </div>
 </div>

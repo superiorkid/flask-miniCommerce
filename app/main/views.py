@@ -2,16 +2,15 @@ from flask_login import login_required, current_user
 from flask import render_template, jsonify, current_app, request, flash, redirect, url_for, session
 from datetime import datetime, timedelta
 
-
 import os
 import requests
 import json
 
 from .forms import OrdersForm
 from . import main
-from ..models import Product, User, Category, OrderItem, Orders
+from ..models import Product, User, Category, OrderItem, Orders, Permission
 from .. import db
-
+from ..decorators import  permission_required
 
 @main.get('/')
 @login_required
@@ -91,3 +90,10 @@ def before_request():
 def invoice(id):
     order = Orders.query.get(id)
     return render_template('invoice.html', order=order)
+
+@main.get('/orders')
+@login_required
+@permission_required(Permission.PRODUCT_MANAGEMENT)
+def orders():
+    orders = Orders.query.all()
+    return render_template("orders.html", orders=orders)

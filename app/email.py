@@ -9,8 +9,8 @@ load_dotenv()
 
 
 def send_mail(to, subject, template, **kwargs):
-    msg = Message(subject, recipients=[
-                  to], sender="Admin Flask-miniCommerce")
+    msg = Message(subject, recipients=[to], sender="Admin Flask-miniCommerce")
     # msg.body = render_template(template + ".txt", **kwargs)
     msg.html = render_template(template + '.html', **kwargs)
     mail.send(msg)
+

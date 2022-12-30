@@ -16,8 +16,6 @@ class EditProfileForm(FlaskForm):
         0, 30)], render_kw={"placeholder": "Last Name"})
     address = StringField('Address', validators=[Length(
         0, 30)], render_kw={"placeholder": "Address"})
-    # state = StringField('State', validators=[Length(
-    #     0, 30)], render_kw={"placeholder": "State"})
     state = SelectField("State", coerce=str)
     city = SelectField('City', coerce=str)
     country = StringField('Country', validators=[Length(
@@ -120,7 +118,7 @@ class EditProfileAdminForm(FlaskForm):
         return cities
 
     def validate_phone(self, field):
-        try:
+        try: 
             p = phonenumbers.parse(f"+{field.data}")
             if not phonenumbers.is_valid_number(p):
                 raise ValueError()
