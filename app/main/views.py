@@ -1,5 +1,5 @@
 from flask_login import login_required, current_user
-from flask import render_template, jsonify, current_app, request, flash, redirect, url_for, session
+from flask import render_template, jsonify, current_app, request, flash, redirect, url_for, session, abort
 from datetime import datetime, timedelta
 
 import os
@@ -74,15 +74,17 @@ def payment():
     return render_template('cart/checkout.html', carts=carts, form=form)
 
 
-@main.before_app_request
-def before_request():
+@main.before_request
+def before_request_fucn():
     orders = Orders.query.all()
 
-    for order in orders:
-        if (order.status != 'success') and (order.status != "cancel"):
-            if (order.created_at - timedelta(days=1)) >= order.created_at:
-                order.status = "expired"
-                db.session.commit()
+    if orders:
+        for order in orders:
+            if order.status == "pending":
+                more_than_one_day = datetime.today() - timedelta(days=1)
+                if order.created_at < more_than_one_day:
+                    order.status = "expired"
+                    db.session.commit()
 
 
 @main.get('/invoice/<int:id>')
@@ -97,3 +99,15 @@ def invoice(id):
 def orders():
     orders = Orders.query.all()
     return render_template("orders.html", orders=orders)
+
+
+@main.get('/cancel_order/<int:id>')
+@login_required
+def cancel_order(id):
+    try:
+        order = Orders.query.get(id)
+        order.status = "cancel"
+        db.session.commit()
+        return url_for(redirect('user.history'))
+    except:
+        abort(500)

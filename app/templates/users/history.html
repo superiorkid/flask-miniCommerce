@@ -41,6 +41,9 @@
                   </td>
                   <td>
                     <a href="{{ url_for('main.invoice', id=order.id) }}" class="btn btn-sm btn-warning">{{ render_icon('file-earmark-text-fill') }}</a>
+                    {% if order.status == "pending" %}
+                      <a href="{{ url_for('main.cancel_order', id=order.id) }}" class="btn btn-sm btn-danger" data-toggle="tooltip" data-placement="top" title="Cancel Order">{{ render_icon("x-circle-fill") }}</a>
+                    {% endif %}
                   </td>
                 </tr>
                 {% endfor %}
