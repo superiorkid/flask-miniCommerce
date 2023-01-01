@@ -85,7 +85,7 @@
     #}
     {% if current_user == order.customer %}
         {% if order.status == "pending" %}
-            **<span class="font-weight-light font-italic">Anda bisa langsung bayar <a href="#detail">disini</a></span>
+            **<span class="font-weight-light font-italic">Anda bisa langsung bayar <a href="{{ url_for('users.proof_of_payment') }}">disini</a></span>
         {% elif order.status == 'expired'  %}
             **<span class="font-weight-light font-italic">Pembayaran anda telah expired.</span>
         {% elif order.status == 'success'  %}

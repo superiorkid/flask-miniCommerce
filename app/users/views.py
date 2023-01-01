@@ -8,7 +8,7 @@ import requests
 from . import users
 from .. import db
 from ..decorators import admin_required
-from .forms import EditProfileForm, EditProfileAdminForm
+from .forms import EditProfileForm, EditProfileAdminForm, ProofOfPaymentForm
 from ..models import User, Role, Orders, OrderItem
 
 
@@ -138,3 +138,11 @@ def get_cities(province_id):
 def history():
     orders = Orders.query.filter_by(customer_id=current_user.id).all()
     return render_template('users/history.html', orders=orders)
+
+
+# proof of payment
+@users.get('/paying')
+@users.post('/paying')
+def proof_of_payment():
+    form = ProofOfPaymentForm()
+    return render_template("proof_of_pay.html", form=form)
