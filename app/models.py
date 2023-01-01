@@ -152,10 +152,8 @@ class Product(db.Model):
     image = db.Column(db.String(110), nullable=False)
     quantity = db.Column(db.Integer, nullable=False)
     regural_price = db.Column(db.DECIMAL)
-    category = db.relationship('Category', secondary=product_category,
-                               lazy="subquery", backref=db.backref('products', lazy=True))
-    item_ordered = db.relationship(
-        'OrderItem', backref="product", lazy=True, uselist=False)
+    category = db.relationship('Category', secondary=product_category, lazy="subquery", backref=db.backref('products', lazy=True))
+    item_ordered = db.relationship('OrderItem', backref="product", lazy=True, uselist=False)
 
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow)

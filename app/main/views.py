@@ -50,16 +50,16 @@ def payment():
 
     if form.validate_on_submit():
         penerima, alamat, pesan = form.penerima.data, form.alamat.data, form.pesan.data
-        new_order = Orders(customer_id=current_user.id, penerima=penerima,
-                           alamat=alamat, pesan=pesan, total=carts['total'])
+        new_order = Orders(customer_id=current_user.id, penerima=penerima, alamat=alamat, pesan=pesan, total=carts['total'])
 
         for cart in carts['detail']:
-            product = Product.query.filter_by(
-                product_name=cart['name']).first()
-            new_order_item = OrderItem(
-                quantity=cart['quantity'], price=cart['cost'], product_id=product.id)
+            product = Product.query.filter_by(product_name=cart['name']).first()
+            new_order_item = OrderItem(quantity=cart['quantity'], price=cart['cost'], product_id=product.id)
             db.session.add(new_order_item)
             new_order.items.append(new_order_item)
+
+            # reduce the product quantity every time pay is clicked
+            product.quantity -= int(cart["quantity"])
 
         # delete user cart
         user = User.query.get(current_user.id)
@@ -106,8 +106,15 @@ def orders():
 def cancel_order(id):
     try:
         order = Orders.query.get(id)
+        items = OrderItem.query.filter_by(orders=order).all()
+
+        for item in items:
+            # returns the quantity of products that are canceled in the order.
+            item.product.quantity += item.quantity
+            db.session.add(item)
+
         order.status = "cancel"
         db.session.commit()
-        return url_for(redirect('user.history'))
+        return redirect(url_for('users.history'))
     except:
         abort(500)
