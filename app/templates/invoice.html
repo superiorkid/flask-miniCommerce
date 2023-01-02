@@ -80,20 +80,25 @@
         </div>
       </div>
 
-    {#
-        i have no idea :"
-    #}
-    {% if current_user == order.customer %}
-        {% if order.status == "pending" %}
-            **<span class="font-weight-light font-italic">Anda bisa langsung bayar <a href="{{ url_for('users.proof_of_payment') }}">disini</a></span>
-        {% elif order.status == 'expired'  %}
-            **<span class="font-weight-light font-italic">Pembayaran anda telah expired.</span>
-        {% elif order.status == 'success'  %}
-            **<span class="font-weight-light font-italic">Anda telah menyelesaikan pembayaran. Terima kasih..</span>
-        {% else %}
-            **<span class="font-weight-light font-italic">Anda telah meng-cancel order.</span>
+    <div class="p-2">
+      <p>Pembayaran via <span class="font-italic">OVO, DANA, GOPAY</span>ke nomor 19892874949.<span class="font-italic">atau, </span>
+          <br>
+      Pembayaran via <span class="font-italic">Bank BRI</span> ke nomor 8764-9283-0293-91-0.</p>
+
+         {% if current_user == order.customer %}
+            {% if order.status == "pending" %}
+                **<span class="font-weight-light font-italic">Anda bisa langsung bayar <a href="{{ url_for('users.proof_of_payment', id=order.id) }}">disini</a></span>
+            {% elif order.status == 'expired'  %}
+                **<span class="font-weight-light font-italic">Pembayaran anda telah expired.</span>
+            {% elif order.status == 'success'  %}
+                **<span class="font-weight-light font-italic">Anda telah menyelesaikan pembayaran. Terima kasih..</span>
+            {% else %}
+                **<span class="font-weight-light font-italic">Anda telah meng-cancel order.</span>
+            {% endif %}
         {% endif %}
-    {% endif %}
+    </div>
+
+
     </div>
   </div>
 {% endblock content %}
