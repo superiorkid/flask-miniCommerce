@@ -81,8 +81,11 @@ def before_request_fucn():
     if orders:
         for order in orders:
             if order.status == "pending":
+                items = OrderItem.query.filter_by(orders=order).all()
                 more_than_one_day = datetime.today() - timedelta(days=1)
                 if order.created_at < more_than_one_day:
+                    for item in items:
+                        item.product.quantity += item.quantity
                     order.status = "expired"
                     db.session.commit()
 
