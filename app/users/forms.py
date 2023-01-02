@@ -131,11 +131,9 @@ class EditProfileAdminForm(FlaskForm):
 class ProofOfPaymentForm(FlaskForm):
     # the name of the person or entity making the payment
     payer = StringField("From", validators=[DataRequired()])
-    # the name of the person or entity receiving the payment
-    payee = StringField('To', validators=[DataRequired()])
     # the date that the payment made
     date = DateField("Date", validators=[DataRequired()])
     # the method to make the payment, such as cash, check, or credit card, etc.
-    peyment_method = StringField('Payment Method', validators=[DataRequired()])
-    proof_of_payment = FileField("Image", validators=[FileRequired(), FileAllowed(["jpg", "png", "jpeg"], "Images Only!")])
+    payment_method = SelectField('Payment via', choices=[("0", "--Pilih Pembayaran"), ("dana", "Dana"), ("ovo", "OVO"), ("gopay", "GoPay"), ("bri", "BRI")])
+    image = FileField("select image...", validators=[FileRequired(), FileAllowed(["jpg", "png", "jpeg"], "Images Only!")])
     submit = SubmitField('Send')

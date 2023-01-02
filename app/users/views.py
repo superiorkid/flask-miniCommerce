@@ -1,7 +1,10 @@
+import os.path
+
 from flask_login import login_required
 from flask import render_template, flash, redirect, url_for, current_app, abort, jsonify
 from flask_login import current_user
 from datetime import datetime
+from werkzeug.utils import secure_filename
 
 import requests
 
@@ -9,7 +12,7 @@ from . import users
 from .. import db
 from ..decorators import admin_required
 from .forms import EditProfileForm, EditProfileAdminForm, ProofOfPaymentForm
-from ..models import User, Role, Orders, OrderItem
+from ..models import User, Role, Orders, ProofOfPayment
 
 
 @users.get('/')
@@ -141,8 +144,35 @@ def history():
 
 
 # proof of payment
-@users.get('/paying')
-@users.post('/paying')
-def proof_of_payment():
+@users.get('/paying/<int:id>')
+@users.post('/paying/<int:id>')
+@login_required
+def proof_of_payment(id):
     form = ProofOfPaymentForm()
+    UPLOAD_DIR = os.path.join(current_app.config['UPLOAD_FOLDER'], "transaction_image")
+
+    if not os.path.exists(UPLOAD_DIR):
+        os.makedirs(UPLOAD_DIR)
+
+    order = Orders.query.get(id)
+
+    if form.validate_on_submit():
+        try:
+            payer, date, payment_method, image = form.payer.data,form.date.data, form.payment_method.data, form.image.data
+            filename = secure_filename(image.filename)
+            pop = ProofOfPayment(date=date, payer=payer, payment_method=payment_method, proof_of_payment=filename, paying=order)
+            image.save(os.path.join(UPLOAD_DIR, filename))
+
+            order.status = "capture"
+
+            db.session.add(pop)
+            db.session.commit()
+
+            flash("Submit proof of successful payment. please wait for confirmation from the store. thank you!!", "success")
+            return redirect(url_for("users.history"))
+
+        except:
+            abort(500)
+
+
     return render_template("proof_of_pay.html", form=form)
