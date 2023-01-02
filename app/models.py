@@ -191,9 +191,22 @@ class Orders(db.Model):
     total = db.Column(db.DECIMAL, nullable=False)
     pesan = db.Column(db.Text, nullable=True)
     status = db.Column(db.String(100), nullable=False, default="pending")
+    proof_of_payment = db.relationship("ProofOfPayment", backref="paying", lazy=True)
 
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow)
 
     def __repr__(self) -> str:
         return f"id {self.id}"
+
+
+class ProofOfPayment(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    date = db.Column(db.DateTime, nullable=False)
+    order_id = db.Column(db.Integer, db.ForeignKey("orders.id"))
+    payer = db.Column(db.String(100), nullable=False)
+    payment_method = db.Column(db.String(100), nullable=False)
+    proof_of_payment = db.Column(db.String(100), nullable=False)
+
+    def __repr__(self):
+        return f'<From {self.payer}, To {self.payee}>'
