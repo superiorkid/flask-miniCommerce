@@ -51,9 +51,16 @@
                         {% if order.status == "success" %}
                             <span class="badge badge-success">{{ order.status }}</span>
                         {% endif %}
+
+                        {% if order.status == "capture" %}
+                            <span class="badge badge-primary">{{ order.status }}</span>
+                        {% endif %}
                     </td>
                     <td>
                         <a href="{{ url_for("main.invoice", id=order.id) }}" class="btn btn-sm btn-primary">{{ render_icon("file-earmark-text-fill") }}</a>
+                        {% if order.status == "capture" %}
+                            <a href="{{ url_for('users.pop_details', id=order.id) }}" class="btn btn-sm btn-secondary">{{ render_icon("file-text-fill") }}</a>
+                        {% endif %}
                     </td>
                 </tr>
             {% endfor %}

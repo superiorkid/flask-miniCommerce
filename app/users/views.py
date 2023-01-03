@@ -176,3 +176,41 @@ def proof_of_payment(id):
 
 
     return render_template("proof_of_pay.html", form=form)
+
+
+@users.get('/pop_details/<int:id>')
+@login_required
+@admin_required
+def pop_details(id):
+    try:
+        order = Orders.query.get(id)
+        pop_ = order.proof_of_payment
+        return render_template('pop_details.html', pop=pop_)
+    except:
+        abort(500)
+
+
+@users.get('/<int:id>/accept')
+@login_required
+@admin_required
+def onAccept(id):
+    try:
+        order = Orders.query.get(id  )
+        order.status = "success"
+        db.session.commit()
+        return redirect(url_for("users.orders"))
+    except:
+        abort(404)
+
+
+@users.get('/<int:id>/decline')
+@login_required
+@admin_required
+def onDecline(id):
+    try:
+        order = Orders.query.get(id)
+        order.status = "cancel"
+        db.session.commit()
+        return redirect(url_for("users.orders"))
+    except:
+        abort(404)

@@ -1,0 +1,36 @@
+{% from "bootstrap4/utils.html" import render_icon %}
+
+{% extends "base.html" %}
+
+{% block content %}
+    <div class="container mt-5 pb-5 w-25">
+        <h1 class="font-weight-bold ml-2">POP details</h1>
+        <hr>
+
+        <div class="card">
+            <div class="card-body">
+                 <div class="form-group">
+                    <label for="">Date</label>
+                    <input type="text" class="form-control text-muted" value="{{ pop.date }}" disabled>
+                </div>
+                <div class="form-group">
+                    <label for="">From</label>
+                    <input type="text" class="form-control text-muted" value="{{ pop.payer }}" disabled>
+                </div>
+                <div class="form-group">
+                    <label for="">Payment method</label>
+                    <input type="text" class="form-control text-muted" value="{{ pop.payment_method }}" disabled>
+                </div>
+                <div class="form-group">
+                    <label for="">POP</label>
+                    <a href="{{ url_for("static", filename='uploads/transaction_image/' + pop.proof_of_payment) }}" target="_blank" class="btn btn-sm btn-info form-control">Lihat bukti pembayaran {{ render_icon("box-arrow-up-right") }}</a>
+                </div>
+            </div>
+            <div class="card-footer">
+                <a href="{{ url_for("users.onAccept", id=pop.paying.id) }}" class="btn btn-sm btn-block btn-success">Accept</a>
+                <a href="{{ url_for('users.onDecline', id=pop.paying.id) }}" class="btn btn-sm btn-block btn-danger">Decline</a>
+            </div>
+        </div>
+
+    </div>
+{% endblock %}
